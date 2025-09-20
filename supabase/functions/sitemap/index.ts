@@ -7,18 +7,8 @@ const corsHeaders = {
 }
 
 interface Article {
-  id: string;
-  title: string;
   slug: string;
-  published: boolean;
   updated_at: string;
-  published_at: string;
-}
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
 }
 
 serve(async (req) => {
@@ -29,38 +19,26 @@ serve(async (req) => {
 
   try {
     const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('VITE_SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
-    // Fetch articles
-    const { data: articles, error: articlesError } = await supabaseClient
+    // Fetch published articles
+    const { data: articles, error } = await supabaseClient
       .from("articles")
-      .select("id, title, slug, published, updated_at, published_at")
+      .select("slug, updated_at")
       .eq("published", true)
-      .order("published_at", { ascending: false });
+      .order("updated_at", { ascending: false });
 
-    if (articlesError) {
-      console.error('Error fetching articles:', articlesError);
-      throw articlesError;
+    if (error) {
+      console.error('Error fetching articles:', error);
+      throw error;
     }
 
-    // Fetch categories
-    const { data: categories, error: categoriesError } = await supabaseClient
-      .from("categories")
-      .select("id, name, slug")
-      .order("name");
-
-    if (categoriesError) {
-      console.error('Error fetching categories:', categoriesError);
-      throw categoriesError;
-    }
-
-    const sitemapXml = generateSitemap(articles as Article[], categories as Category[]);
+    const sitemapXml = generateSitemap(articles as Article[]);
 
     return new Response(sitemapXml, {
       headers: {
-        ...corsHeaders,
         'Content-Type': 'application/xml; charset=utf-8',
         'Cache-Control': 's-maxage=3600, stale-while-revalidate',
       },
@@ -68,86 +46,88 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Sitemap generation error:', error);
-    return new Response(JSON.stringify({ error: 'Failed to generate sitemap' }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    return new Response(generateFallbackSitemap(), {
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+      },
     });
   }
 });
 
-function generateSitemap(articles: Article[], categories: Category[]) {
+function generateSitemap(articles: Article[]) {
   const baseUrl = "https://thebulletinbriefs.in";
   const today = new Date().toISOString().split("T")[0];
 
-  let urls = `
+  // Static pages
+  const staticPages = [
+    { path: '/', changefreq: 'daily', priority: '1.0' },
+    { path: '/about', changefreq: 'monthly', priority: '0.7' },
+    { path: '/contact', changefreq: 'monthly', priority: '0.7' },
+    { path: '/editorial-guidelines', changefreq: 'monthly', priority: '0.7' },
+    { path: '/subscription', changefreq: 'weekly', priority: '0.7' },
+    { path: '/privacy', changefreq: 'monthly', priority: '0.7' },
+    { path: '/terms', changefreq: 'monthly', priority: '0.7' },
+    { path: '/cookies', changefreq: 'monthly', priority: '0.7' },
+    { path: '/disclaimer', changefreq: 'monthly', priority: '0.7' },
+    { path: '/rss', changefreq: 'daily', priority: '0.5' }
+  ];
+
+  let urls = '';
+  
+  // Add static pages
+  staticPages.forEach(page => {
+    urls += `  <url>
+    <loc>${baseUrl}${page.path}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
+  </url>
+`;
+  });
+
+  // Add article pages
+  articles.forEach(article => {
+    const lastmod = article.updated_at 
+      ? new Date(article.updated_at).toISOString().split("T")[0] 
+      : today;
+    
+    urls += `  <url>
+    <loc>${baseUrl}/article/${article.slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+`;
+  });
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}</urlset>`;
+}
+
+function generateFallbackSitemap() {
+  const baseUrl = "https://thebulletinbriefs.in";
+  const today = new Date().toISOString().split("T")[0];
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>${baseUrl}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>`;
-
-  // Static pages
-  const staticPages = [
-    { path: '/about', changefreq: 'monthly' },
-    { path: '/contact', changefreq: 'monthly' },
-    { path: '/editorial-guidelines', changefreq: 'monthly' },
-    { path: '/subscription', changefreq: 'weekly' },
-    { path: '/privacy', changefreq: 'monthly' },
-    { path: '/terms', changefreq: 'monthly' },
-    { path: '/cookies', changefreq: 'monthly' },
-    { path: '/disclaimer', changefreq: 'monthly' }
-  ];
-
-  staticPages.forEach(page => {
-    urls += `
+  </url>
   <url>
-    <loc>${baseUrl}${page.path}</loc>
+    <loc>${baseUrl}/about</loc>
     <lastmod>${today}</lastmod>
-    <changefreq>${page.changefreq}</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>`;
-  });
-
-  // Category pages
-  categories.forEach(category => {
-    urls += `
+  </url>
   <url>
-    <loc>${baseUrl}/category/${category.slug}</loc>
+    <loc>${baseUrl}/contact</loc>
     <lastmod>${today}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>`;
-  });
-
-  // Article pages
-  articles
-    .filter(article => article.published)
-    .forEach(article => {
-      const lastmod = article.updated_at 
-        ? new Date(article.updated_at).toISOString().split("T")[0] 
-        : today;
-      
-      urls += `
-  <url>
-    <loc>${baseUrl}/article/${article.slug}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>`;
-    });
-
-  // RSS Feed
-  urls += `
-  <url>
-    <loc>${baseUrl}/rss</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.5</priority>
-  </url>`;
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls}
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>`;
 }

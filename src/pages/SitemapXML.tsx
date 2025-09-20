@@ -31,21 +31,17 @@ export default function SitemapXML() {
 
   useEffect(() => {
     if (xmlContent && !isLoading) {
-      // Create a proper XML response
-      const blob = new Blob([xmlContent], { 
-        type: 'application/xml; charset=utf-8' 
-      });
+      // Set proper headers and serve XML directly
+      document.querySelector('meta[http-equiv="Content-Type"]')?.remove();
+      const metaTag = document.createElement('meta');
+      metaTag.setAttribute('http-equiv', 'Content-Type');
+      metaTag.setAttribute('content', 'application/xml; charset=utf-8');
+      document.head.appendChild(metaTag);
       
-      // Create object URL and redirect to it
-      const url = URL.createObjectURL(blob);
-      
-      // Use replace to avoid back button issues
-      window.location.replace(url);
-      
-      // Clean up the URL after a short delay
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-      }, 1000);
+      // Replace entire page with XML content
+      document.open();
+      document.write(xmlContent);
+      document.close();
     }
   }, [xmlContent, isLoading]);
 
