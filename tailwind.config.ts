@@ -57,6 +57,13 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        toggle: {
+          "track-active": "hsl(var(--toggle-track-active))",
+          "track-inactive": "hsl(var(--toggle-track-inactive))",
+          thumb: "hsl(var(--toggle-thumb))",
+          shadow: "hsl(var(--toggle-shadow))",
+          glow: "hsl(var(--toggle-glow))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
