@@ -1,14 +1,19 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
 Allow: /
+
+# Sitemaps
+Sitemap: https://thebulletinbriefs.in/sitemap.xml
+Sitemap: https://thebulletinbriefs.in/news-sitemap.xml
+
+# RSS Feed
+Sitemap: https://thebulletinbriefs.in/rss
+
+# Block admin areas
+Disallow: /admin/
+
+# Block sensitive areas
+Disallow: /api/
+Disallow: /*.json$
+
+# Crawl delay
+Crawl-delay: 1
