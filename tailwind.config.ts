@@ -31,9 +31,11 @@ export default {
 		extend: {
 			fontFamily: {
 				'inter': ['Inter', 'system-ui', 'sans-serif'],
-				'playfair': ['Playfair Display', 'Georgia', 'serif'],
+				'crimson': ['Crimson Text', 'Georgia', 'serif'],
+				'source-serif': ['Source Serif Pro', 'Georgia', 'serif'],
 				'sans': ['Inter', 'system-ui', 'sans-serif'],
-				'serif': ['Playfair Display', 'Georgia', 'serif'],
+				'serif': ['Crimson Text', 'Georgia', 'serif'],
+				'headline': ['Source Serif Pro', 'Georgia', 'serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

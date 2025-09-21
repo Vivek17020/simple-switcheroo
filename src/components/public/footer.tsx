@@ -33,31 +33,36 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-card border-t">
+    <footer className="bg-muted/30 border-t border-border/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Newsletter Section */}
-        <div className="py-12">
+        <div className="py-16">
           <div className="max-w-md mx-auto">
             <NewsletterSignup />
           </div>
         </div>
 
-        <Separator />
+        <Separator className="opacity-30" />
 
         {/* Main Footer Content */}
         <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div className="space-y-4">
-            <Link to="/" className="flex items-center space-x-2">
+            <Link to="/" className="flex items-center space-x-3">
               <img 
                 src="/logo.png" 
                 alt="TheBulletinBriefs Logo" 
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-10 h-10 rounded-full object-cover shadow-sm"
               />
-              <span className="font-bold text-xl">TheBulletinBriefs</span>
+              <div className="flex flex-col">
+                <span className="font-headline font-bold text-xl text-primary">TheBulletinBriefs</span>
+                <span className="text-xs text-muted-foreground uppercase tracking-wide">
+                  Breaking News & Analysis
+                </span>
+              </div>
             </Link>
-            <p className="text-sm text-muted-foreground">
-              Your trusted source for breaking news, in-depth analysis, and comprehensive coverage of events that matter.
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Your trusted source for breaking news, in-depth analysis, and comprehensive coverage of events that matter. Delivering quality journalism with integrity and professionalism.
             </p>
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">

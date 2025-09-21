@@ -14,23 +14,28 @@ export function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
+      <div className="container flex h-20 items-center">
         <div className="mr-4 hidden md:flex">
-          <Link to="/" className="mr-6 flex items-center space-x-2">
+          <Link to="/" className="mr-8 flex items-center space-x-3">
             <img 
               src="/logo.png" 
               alt="TheBulletinBriefs Logo" 
-              className="w-8 h-8 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover shadow-md"
             />
-            <span className="font-bold text-xl bg-gradient-primary bg-clip-text text-transparent">
-              TheBulletinBriefs
-            </span>
+            <div className="flex flex-col">
+              <span className="font-headline font-bold text-2xl text-primary">
+                TheBulletinBriefs
+              </span>
+              <span className="text-xs text-muted-foreground uppercase tracking-wide">
+                Breaking News & Analysis
+              </span>
+            </div>
           </Link>
-          <nav className="flex items-center space-x-6 text-sm font-medium">
+          <nav className="flex items-center space-x-8 text-sm font-medium">
             <Link
               to="/"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
+              className="relative py-2 transition-all hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full"
             >
               Home
             </Link>
@@ -38,7 +43,7 @@ export function Navbar() {
               <Link
                 key={category.id}
                 to={`/category/${category.slug}`}
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                className="relative py-2 transition-all hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full uppercase tracking-wide"
               >
                 {category.name}
               </Link>
@@ -57,7 +62,7 @@ export function Navbar() {
             alt="TheBulletinBriefs Logo" 
             className="w-8 h-8 rounded-full object-cover mr-2"
           />
-          <span className="font-bold text-xl bg-gradient-primary bg-clip-text text-transparent">
+          <span className="font-headline font-bold text-xl text-primary">
             TheBulletinBriefs
           </span>
           {mobileMenuOpen ? (
