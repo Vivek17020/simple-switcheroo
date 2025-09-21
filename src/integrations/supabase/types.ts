@@ -704,45 +704,6 @@ export type Database = {
         }
         Relationships: []
       }
-      subscribers: {
-        Row: {
-          created_at: string
-          email: string
-          id: string
-          razorpay_customer_id: string | null
-          razorpay_subscription_id: string | null
-          subscribed: boolean
-          subscription_end: string | null
-          subscription_tier: string | null
-          updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          id?: string
-          razorpay_customer_id?: string | null
-          razorpay_subscription_id?: string | null
-          subscribed?: boolean
-          subscription_end?: string | null
-          subscription_tier?: string | null
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          id?: string
-          razorpay_customer_id?: string | null
-          razorpay_subscription_id?: string | null
-          subscribed?: boolean
-          subscription_end?: string | null
-          subscription_tier?: string | null
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       user_analytics: {
         Row: {
           article_id: string | null
@@ -991,17 +952,6 @@ export type Database = {
           id: string
           job_title: string
           username: string
-        }[]
-      }
-      get_user_subscription_status: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          created_at: string
-          id: string
-          subscribed: boolean
-          subscription_end: string
-          subscription_tier: string
-          updated_at: string
         }[]
       }
       is_admin: {
