@@ -86,15 +86,6 @@ export default function NewsHomepage() {
                     Search
                   </Button>
                   <PushNotificationButton />
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => navigate('/subscription')}
-                    className="gap-2 bg-gradient-to-r from-primary to-primary/80"
-                  >
-                    <Crown className="h-4 w-4" />
-                    Go Premium
-                  </Button>
                 </div>
               </div>
             </div>
@@ -212,27 +203,6 @@ export default function NewsHomepage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Crown className="h-5 w-5 text-primary" />
-                  Premium Content
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Access exclusive articles and ad-free reading
-                </p>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => navigate('/subscription')}
-                  className="w-full"
-                >
-                  Upgrade Now
-                </Button>
-              </CardContent>
-            </Card>
           </div>
         </main>
 

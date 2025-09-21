@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArticleCard } from '@/components/public/article-card';
-import { PremiumGate } from './premium-gate';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, Lock } from 'lucide-react';
 import { useArticles } from '@/hooks/use-articles';
@@ -83,17 +83,6 @@ export const PremiumArticleList = ({
         ))}
       </div>
 
-      {showGate && (
-        <div className="mt-8">
-          <PremiumGate
-            isPremium={true}
-            previewContent="Unlock access to our entire premium article collection with exclusive interviews, in-depth analysis, and breaking news coverage."
-            onSubscribe={() => navigate('/subscription')}
-          >
-            <div>Premium content placeholder</div>
-          </PremiumGate>
-        </div>
-      )}
     </div>
   );
 };
