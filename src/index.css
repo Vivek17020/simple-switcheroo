@@ -8,124 +8,175 @@ All colors MUST be HSL. Rich blues and purples with sophisticated gradients.
 
 @layer base {
   :root {
-    /* Professional News Site - Light Theme */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
+    /* Core background and foreground */
+    --background: 222 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-    /* Card colors with clean contrast */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
+    /* Card colors with subtle contrast */
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
 
     /* Popover colors */
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
 
-    /* Primary brand - Professional news blue */
-    --primary: 220 100% 50%;
-    --primary-foreground: 0 0% 100%;
-    --primary-light: 220 100% 96%;
+    /* Primary brand colors - Rich blue */
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 84% 4.9%;
+    --primary-glow: 217 91% 70%;
 
-    /* Secondary colors - Elegant grays */
-    --secondary: 210 11% 96%;
-    --secondary-foreground: 0 0% 9%;
+    /* Secondary colors - Sophisticated purple */
+    --secondary: 266 85% 58%;
+    --secondary-foreground: 210 40% 98%;
 
     /* Muted colors for subtle elements */
-    --muted: 210 11% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 217 32% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    /* Accent colors - News red for urgency */
-    --accent: 0 84% 55%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent colors - Vibrant purple */
+    --accent: 266 85% 58%;
+    --accent-foreground: 210 40% 98%;
 
-    /* Status colors */
+    /* Success color - Rich green */
     --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
+    --success-foreground: 210 40% 98%;
+
+    /* Warning color - Rich amber */
     --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 9%;
+    --warning-foreground: 222 84% 4.9%;
+
+    /* Destructive colors */
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 210 40% 98%;
 
     /* Border and input colors */
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 220 100% 50%;
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 217 91% 60%;
 
     /* Design tokens */
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* Professional news gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(220 100% 50%), hsl(220 100% 40%));
-    --gradient-hero: linear-gradient(135deg, hsl(220 100% 50%), hsl(220 80% 30%));
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 11% 98%));
+    /* Professional gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(266 85% 58%));
+    --gradient-secondary: linear-gradient(135deg, hsl(266 85% 58%), hsl(217 91% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60%), hsl(266 85% 58%), hsl(142 76% 36%));
+    --gradient-subtle: linear-gradient(180deg, hsl(222 47% 11%), hsl(222 84% 4.9%));
 
     /* Professional shadows */
-    --shadow-sm: 0 1px 3px hsl(0 0% 0% / 0.1);
-    --shadow-md: 0 4px 6px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 10px 15px hsl(0 0% 0% / 0.1);
-    --shadow-xl: 0 20px 25px hsl(0 0% 0% / 0.1);
+    --shadow-sm: 0 2px 8px hsl(222 84% 4.9% / 0.04);
+    --shadow-md: 0 4px 16px hsl(222 84% 4.9% / 0.08);
+    --shadow-lg: 0 8px 32px hsl(222 84% 4.9% / 0.12);
+    --shadow-glow: 0 0 40px hsl(217 91% 60% / 0.3);
+    --shadow-accent: 0 8px 32px hsl(266 85% 58% / 0.2);
 
     /* Smooth transitions */
-    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    /* News-specific colors */
-    --breaking-news: 0 84% 55%;
-    --urgent: 15 100% 55%;
-    --category-politics: 220 100% 50%;
-    --category-business: 142 76% 36%;
-    --category-tech: 263 85% 65%;
-    --category-sports: 24 100% 50%;
+    /* Enhanced typography tokens - using theme-aware colors */
+    --text-heading: var(--foreground);
+    --text-paragraph: var(--foreground);
+
+    /* Sidebar design tokens */
+    --sidebar-background: 222 84% 4.9%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 222 84% 4.9%;
+    --sidebar-accent: 217 32% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 32% 17%;
+    --sidebar-ring: 217 91% 60%;
   }
 
   .light {
-    /* Same as root - already defined above */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
+    --primary-glow: 217 91% 70%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 222.2 84% 4.9%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 217 91% 60%;
+
+    /* Enhanced typography tokens for light theme */
+    --text-heading: 222.2 84% 4.9%;
+    --text-paragraph: 215.4 16.3% 46.9%;
   }
 
   .dark {
-    /* Professional News Site - Dark Theme */
-    --background: 220 13% 9%;
-    --foreground: 0 0% 95%;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-    --card: 220 13% 11%;
-    --card-foreground: 0 0% 95%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 220 13% 11%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 220 100% 60%;
-    --primary-foreground: 0 0% 9%;
-    --primary-light: 220 100% 15%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --primary-glow: 217 91% 70%;
 
-    --secondary: 220 13% 15%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 220 13% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 0 84% 60%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
 
     --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
+    --success-foreground: 210 40% 98%;
+
     --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 9%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --warning-foreground: 222.2 84% 4.9%;
 
-    --border: 220 13% 18%;
-    --input: 220 13% 18%;
-    --ring: 220 100% 60%;
-
-    /* Dark theme gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(220 100% 60%), hsl(220 100% 50%));
-    --gradient-hero: linear-gradient(135deg, hsl(220 100% 60%), hsl(220 80% 40%));
-    --gradient-subtle: linear-gradient(180deg, hsl(220 13% 11%), hsl(220 13% 9%));
-
-    /* Dark theme shadows */
-    --shadow-sm: 0 1px 3px hsl(0 0% 0% / 0.3);
-    --shadow-md: 0 4px 6px hsl(0 0% 0% / 0.3);
-    --shadow-lg: 0 10px 15px hsl(0 0% 0% / 0.3);
-    --shadow-xl: 0 20px 25px hsl(0 0% 0% / 0.3);
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Enhanced typography tokens for dark theme */
+    --text-heading: 210 40% 98%;
+    --text-paragraph: 215 20.2% 65.1%;
   }
 }
 

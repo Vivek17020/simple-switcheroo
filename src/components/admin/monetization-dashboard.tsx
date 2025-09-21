@@ -73,8 +73,11 @@ export const MonetizationDashboard = () => {
           .gte('created_at', startDate)
           .not('revenue_amount', 'is', null),
 
-        // No subscriber count since subscriptions are removed
-        Promise.resolve({ count: 0 }),
+        // Fetch subscriber count with error handling
+        supabase
+          .from('subscribers')
+          .select('*', { count: 'exact', head: true })
+          .eq('subscribed', true),
 
         // Fetch ad impressions
         supabase
