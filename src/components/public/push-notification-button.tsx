@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Bell, BellOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -8,6 +9,7 @@ export function PushNotificationButton() {
   const [isSupported, setIsSupported] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export function PushNotificationButton() {
     return outputArray;
   };
 
-  const subscribe = async () => {
+  const handleAllow = async () => {
     setIsLoading(true);
     try {
       const registration = await navigator.serviceWorker.ready;
@@ -55,6 +57,7 @@ export function PushNotificationButton() {
           description: "Please enable notifications in your browser settings.",
           variant: "destructive",
         });
+        setOpen(false);
         return;
       }
 
@@ -78,6 +81,7 @@ export function PushNotificationButton() {
       if (error) throw error;
 
       setIsSubscribed(true);
+      setOpen(false);
       toast({
         title: "Notifications enabled!",
         description: "You'll receive notifications for breaking news.",
@@ -92,6 +96,14 @@ export function PushNotificationButton() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleBlock = () => {
+    setOpen(false);
+    toast({
+      title: "Notifications blocked",
+      description: "You can change this later in your browser settings.",
+    });
   };
 
   const unsubscribe = async () => {
@@ -133,16 +145,59 @@ export function PushNotificationButton() {
     return null;
   }
 
+  if (isSubscribed) {
+    return (
+      <Button
+        onClick={unsubscribe}
+        disabled={isLoading}
+        variant="outline"
+        size="sm"
+        className="gap-2"
+      >
+        <BellOff className="h-4 w-4" />
+        Disable Notifications
+      </Button>
+    );
+  }
+
   return (
-    <Button
-      onClick={isSubscribed ? unsubscribe : subscribe}
-      disabled={isLoading}
-      variant={isSubscribed ? "outline" : "default"}
-      size="sm"
-      className="gap-2"
-    >
-      {isSubscribed ? <BellOff className="h-4 w-4" /> : <Bell className="h-4 w-4" />}
-      {isSubscribed ? 'Disable' : 'Enable'} Notifications
-    </Button>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          variant="default"
+          size="sm"
+          className="gap-2"
+        >
+          <Bell className="h-4 w-4" />
+          Enable Notifications
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Bell className="h-5 w-5" />
+            Enable Push Notifications
+          </DialogTitle>
+          <DialogDescription>
+            Stay updated with breaking news and important stories. We'll only send notifications for the most important news.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button
+            variant="outline"
+            onClick={handleBlock}
+            disabled={isLoading}
+          >
+            Block
+          </Button>
+          <Button
+            onClick={handleAllow}
+            disabled={isLoading}
+          >
+            Allow
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
