@@ -58,29 +58,29 @@ export default function NewsHomepage() {
           <BreakingNews />
           
           {/* Secondary Navigation */}
-          <div className="border-b bg-card">
+          <div className="border-b bg-card/50 backdrop-blur">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-4 overflow-x-auto">
+              <div className="flex items-center justify-between py-4">
+                <div className="flex items-center gap-3 overflow-x-auto">
                   {categories?.slice(0, 6).map((category) => (
                     <Button
                       key={category.id}
                       variant={selectedCategory === category.slug ? "default" : "ghost"}
                       size="sm"
                       onClick={() => setSelectedCategory(category.slug === selectedCategory ? undefined : category.slug)}
-                      className="whitespace-nowrap text-xs"
+                      className="whitespace-nowrap text-sm font-medium rounded-xl px-4 py-2 transition-all hover:scale-105"
                     >
                       {category.name}
                     </Button>
                   ))}
                 </div>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setIsSearchOpen(true)}
-                    className="gap-2"
+                    className="gap-2 rounded-xl border-border/50 hover:bg-accent"
                   >
                     <Search className="h-4 w-4" />
                     Search
@@ -94,7 +94,15 @@ export default function NewsHomepage() {
         
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 critical-above-fold">
           {/* Hero Section - Featured Articles */}
-          <section className="py-4 sm:py-6 lg:py-8 hero-section">
+          <section className="py-8 sm:py-12 lg:py-16 hero-section">
+            <div className="mb-8">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold bg-gradient-primary bg-clip-text text-transparent mb-4">
+                Breaking News & Analysis
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-2xl">
+                Stay informed with comprehensive coverage of global events, politics, technology, and more.
+              </p>
+            </div>
             <FeaturedArticles />
           </section>
 
@@ -106,16 +114,16 @@ export default function NewsHomepage() {
           {/* Main Content Tabs */}
           <section className="py-8">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-8 max-w-md mx-auto">
-                <TabsTrigger value="for-you" className="gap-2">
+              <TabsList className="grid w-full grid-cols-3 mb-8 max-w-lg mx-auto h-12 bg-muted/50 rounded-2xl p-1">
+                <TabsTrigger value="for-you" className="gap-2 rounded-xl font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   {user ? <User className="h-4 w-4" /> : <TrendingUp className="h-4 w-4" />}
                   {user ? "For You" : "Trending"}
                 </TabsTrigger>
-                <TabsTrigger value="browse" className="gap-2">
+                <TabsTrigger value="browse" className="gap-2 rounded-xl font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <Home className="h-4 w-4" />
                   Browse All
                 </TabsTrigger>
-                <TabsTrigger value="premium" className="gap-2">
+                <TabsTrigger value="premium" className="gap-2 rounded-xl font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm">
                   <Crown className="h-4 w-4" />
                   Premium
                 </TabsTrigger>

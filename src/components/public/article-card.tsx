@@ -17,7 +17,7 @@ export function ArticleCard({ article, featured = false, compact = false }: Arti
   if (featured) {
     return (
       <Link to={`/article/${article.slug}`} className="group block">
-        <Card className="overflow-hidden border-border/50 hover:shadow-accent transition-all duration-300 h-full flex flex-col">
+        <Card className="overflow-hidden border-0 hover:shadow-glow bg-card/80 backdrop-blur transition-all duration-500 h-full flex flex-col hover:scale-[1.02] hover:bg-card">
           <div className="relative flex-shrink-0">
             {article.image_url ? (
               <div className="aspect-[16/9] overflow-hidden">
@@ -56,7 +56,7 @@ export function ArticleCard({ article, featured = false, compact = false }: Arti
             </div>
           </div>
           <CardContent className="p-6 flex-1 flex flex-col">
-            <h2 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2">
+            <h2 className="text-2xl font-serif font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
               {article.title}
             </h2>
             {article.excerpt && (
@@ -89,7 +89,7 @@ export function ArticleCard({ article, featured = false, compact = false }: Arti
 
   return (
     <Link to={`/article/${article.slug}`} className="group block">
-      <Card className="overflow-hidden border-border/50 hover:shadow-accent transition-all duration-300 h-full flex flex-col">
+      <Card className="overflow-hidden border-0 bg-card/80 backdrop-blur hover:shadow-accent hover:bg-card transition-all duration-500 h-full flex flex-col hover:scale-[1.01]">
         <div className="flex-shrink-0">
           {article.image_url ? (
             <div className="aspect-[16/9] overflow-hidden">
@@ -132,7 +132,7 @@ export function ArticleCard({ article, featured = false, compact = false }: Arti
               {formatDistanceToNow(publishedDate, { addSuffix: true })}
             </span>
           </div>
-          <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+          <h3 className="font-serif font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
             {article.title}
           </h3>
           {article.excerpt && (

@@ -14,23 +14,31 @@ export function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center">
-        <div className="mr-4 hidden md:flex">
-          <Link to="/" className="mr-6 flex items-center space-x-2">
-            <img 
-              src="/logo.png" 
-              alt="TheBulletinBriefs Logo" 
-              className="w-8 h-8 rounded-full object-cover"
-            />
-            <span className="font-bold text-xl bg-gradient-primary bg-clip-text text-transparent">
-              TheBulletinBriefs
-            </span>
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
+      <div className="container flex h-20 items-center">
+        <div className="mr-8 hidden md:flex">
+          <Link to="/" className="mr-8 flex items-center space-x-3 group">
+            <div className="relative">
+              <img 
+                src="/logo.png" 
+                alt="TheBulletinBriefs Logo" 
+                className="w-10 h-10 rounded-xl object-cover shadow-md transition-transform group-hover:scale-105"
+              />
+              <div className="absolute inset-0 rounded-xl bg-gradient-primary opacity-20 group-hover:opacity-30 transition-opacity"></div>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-serif text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                TheBulletinBriefs
+              </span>
+              <span className="text-xs text-muted-foreground -mt-1">
+                Breaking News & Analysis
+              </span>
+            </div>
           </Link>
-          <nav className="flex items-center space-x-6 text-sm font-medium">
+          <nav className="flex items-center space-x-8 text-sm font-medium">
             <Link
               to="/"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
+              className="relative py-2 px-3 rounded-md transition-all hover:bg-accent hover:text-accent-foreground text-muted-foreground hover:text-foreground"
             >
               Home
             </Link>
@@ -38,7 +46,7 @@ export function Navbar() {
               <Link
                 key={category.id}
                 to={`/category/${category.slug}`}
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                className="relative py-2 px-3 rounded-md transition-all hover:bg-accent hover:text-accent-foreground text-muted-foreground hover:text-foreground"
               >
                 {category.name}
               </Link>
@@ -49,21 +57,21 @@ export function Navbar() {
         {/* Mobile menu button */}
         <Button
           variant="ghost"
-          className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+          className="mr-2 px-0 text-base hover:bg-accent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           <img 
             src="/logo.png" 
             alt="TheBulletinBriefs Logo" 
-            className="w-8 h-8 rounded-full object-cover mr-2"
+            className="w-8 h-8 rounded-xl object-cover mr-2 shadow-sm"
           />
-          <span className="font-bold text-xl bg-gradient-primary bg-clip-text text-transparent">
+          <span className="font-serif font-bold text-lg bg-gradient-primary bg-clip-text text-transparent">
             TheBulletinBriefs
           </span>
           {mobileMenuOpen ? (
-            <X className="ml-2 h-4 w-4" />
+            <X className="ml-2 h-5 w-5" />
           ) : (
-            <Menu className="ml-2 h-4 w-4" />
+            <Menu className="ml-2 h-5 w-5" />
           )}
         </Button>
 
@@ -71,12 +79,12 @@ export function Navbar() {
           <div className="w-full flex-1 md:w-auto md:flex-none">
             {/* Search functionality */}
           </div>
-            <nav className="flex items-center space-x-2">
+            <nav className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setSearchOpen(true)}
-              className="h-9 w-9 p-0"
+              className="h-10 w-10 p-0 rounded-xl hover:bg-accent transition-colors"
             >
               <Search className="h-4 w-4" />
               <span className="sr-only">Search</span>
@@ -90,10 +98,10 @@ export function Navbar() {
       {/* Mobile navigation */}
       {mobileMenuOpen && (
         <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-border bg-background">
+          <div className="px-4 pt-4 pb-6 space-y-2 border-t bg-card/50 backdrop-blur">
             <Link
               to="/"
-              className="block px-3 py-2 text-base font-medium text-foreground/60 hover:text-foreground"
+              className="block px-4 py-3 text-base font-medium rounded-lg transition-colors hover:bg-accent hover:text-accent-foreground text-muted-foreground"
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
@@ -102,7 +110,7 @@ export function Navbar() {
               <Link
                 key={category.id}
                 to={`/category/${category.slug}`}
-                className="block px-3 py-2 text-base font-medium text-foreground/60 hover:text-foreground"
+                className="block px-4 py-3 text-base font-medium rounded-lg transition-colors hover:bg-accent hover:text-accent-foreground text-muted-foreground"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {category.name}
