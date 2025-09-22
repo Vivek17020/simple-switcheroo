@@ -26,6 +26,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminArticles from "./pages/AdminArticles";
 import AdminNewArticle from "./pages/AdminNewArticle";
 import AdminEditArticle from "./pages/AdminEditArticle";
+import AdminVideoCreation from "./pages/AdminVideoCreation";
 import AdminEngagement from "./pages/AdminEngagement";
 import AdminSettings from "./pages/AdminSettings";
 import AMPArticlePage from "./pages/AMPArticlePage";
@@ -77,6 +78,7 @@ const App = () => (
                   <Route path="articles" element={<AdminArticles />} />
                   <Route path="articles/new" element={<AdminNewArticle />} />
                   <Route path="articles/:id/edit" element={<AdminEditArticle />} />
+                  <Route path="videos" element={<AdminVideoCreation />} />
                   <Route path="engagement" element={<AdminEngagement />} />
                   <Route path="settings" element={<AdminSettings />} />
                 </Route>
