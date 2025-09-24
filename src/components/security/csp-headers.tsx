@@ -11,17 +11,19 @@ export function CSPHeaders() {
     cspMeta.httpEquiv = 'Content-Security-Policy';
     cspMeta.content = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://cdn.ampproject.org https://unpkg.com",
-      "style-src 'self' 'unsafe-inline'",
+      "script-src 'self' https://cdn.ampproject.org https://unpkg.com https://js.stripe.com https://checkout.razorpay.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: https: blob:",
-      "font-src 'self' https:",
-      "connect-src 'self' https://tadcyglvsjycpgsjkywj.supabase.co wss://tadcyglvsjycpgsjkywj.supabase.co",
+      "font-src 'self' https: https://fonts.gstatic.com",
+      "connect-src 'self' https://tadcyglvsjycpgsjkywj.supabase.co wss://tadcyglvsjycpgsjkywj.supabase.co https://api.stripe.com https://api.razorpay.com",
+      "frame-src 'self' https://js.stripe.com https://api.razorpay.com https://checkout.razorpay.com",
       "media-src 'self' https:",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
       "frame-ancestors 'none'",
-      "upgrade-insecure-requests"
+      "upgrade-insecure-requests",
+      "block-all-mixed-content"
     ].join('; ');
     
     // Remove existing CSP meta tag if present

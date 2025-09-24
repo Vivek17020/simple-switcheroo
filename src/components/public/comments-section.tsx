@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
+import { validateUserInput } from '@/lib/sanitize';
 import { MessageCircle, Send, Loader2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -57,12 +58,41 @@ export function CommentsSection({ articleId }: CommentsSectionProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newComment.trim()) return;
+    
+    if (!newComment.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a comment",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate and sanitize input
+    const validation = validateUserInput(newComment);
+    if (!validation.isValid) {
+      toast({
+        title: "Error",
+        description: validation.errors.join(', '),
+        variant: "destructive",
+      });
+      return;
+    }
 
     if (!user && (!authorName.trim() || !authorEmail.trim())) {
       toast({
         title: "Required fields",
         description: "Please fill in your name and email.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Basic email validation for anonymous users
+    if (!user && authorEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(authorEmail)) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid email address",
         variant: "destructive",
       });
       return;
@@ -74,7 +104,7 @@ export function CommentsSection({ articleId }: CommentsSectionProps) {
         .from('comments')
         .insert([{
           article_id: articleId,
-          content: newComment.trim(),
+          content: validation.sanitized, // Use sanitized content
           user_id: user?.id || null,
           author_name: user ? user.user_metadata?.full_name || user.email || 'Anonymous' : authorName.trim(),
           author_email: user ? user.email : authorEmail.trim(),
