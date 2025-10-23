@@ -577,7 +577,9 @@ export function ArticleForm({ article, onSave }: ArticleFormProps) {
             .replace(/^```(?:html)?\n?/i, '')
             .replace(/```$/i, '')
             .trim();
-          updates.content = cleaned;
+          // Limit bold highlights to at most 10 key phrases
+          const limited = cleaned.replace(/<strong[^>]*>([\s\S]*?)<\/strong>/gi, ((() => { let i=0; return (_m, p1) => (++i <= 10) ? `<strong>${p1}</strong>` : p1; })()));
+          updates.content = limited;
         }
         
         if (data.title) updates.title = data.title;
@@ -850,8 +852,9 @@ export function ArticleForm({ article, onSave }: ArticleFormProps) {
 
       if (data?.result) {
         const cleaned = data.result.trim();
-        
-        updateFormData({ content: cleaned });
+        // Limit bold highlights to at most 10 key phrases
+        const limited = cleaned.replace(/<strong[^>]*>([\s\S]*?)<\/strong>/gi, ((() => { let i=0; return (_m, p1) => (++i <= 10) ? `<strong>${p1}</strong>` : p1; })()));
+        updateFormData({ content: limited });
         toast({
           title: "Cricket Report Formatted",
           description: "Your cricket match notes have been formatted into a professional match report.",
