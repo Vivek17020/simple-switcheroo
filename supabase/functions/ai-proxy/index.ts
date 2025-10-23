@@ -365,52 +365,65 @@ JSON OUTPUT (no code fences):`
 
       case 'format-cricket':
         try {
-          const cricketPrompt = `You are a professional cricket news editor and content cleaner. Transform raw cricket match notes into a perfectly formatted, clean match report for website display.
+          const cricketPrompt = `You are a professional cricket journalist and formatting expert. Your goal is to convert raw or jumbled cricket match text into a clean, well-structured, and publication-ready report for a sports news website.
 
-CRITICAL CLEANING REQUIREMENTS:
-1. Fix ALL grammar, spacing, and punctuation errors
-2. Remove ALL duplicate or repeated phrases (e.g., "AustraliaAustralia", "the seven-time world champions" appearing multiple times)
-3. Remove broken words and merge fragmented text
-4. Eliminate redundant repetition while keeping unique information
-5. Ensure perfect sentence structure and flow
+Follow these strict formatting and content guidelines:
 
-FORMATTING STRUCTURE:
+1. **Clean Up**
+   - Remove all duplicate phrases or repeated words.
+   - Fix spacing between words and after punctuation.
+   - Remove incomplete or broken sentences.
+   - Maintain consistent capitalization for proper nouns (e.g., Australia, England, ICC, Ashleigh Gardner).
 
-1. **Title**: Short, impactful headline at the top (team names + outcome)
-   
-2. **Quick Summary** (as bullet list):
-   - 3–5 key takeaways
-   - Top scorers with bold names and scores: <strong>Player Name – Score (Balls)</strong>
-   - Key wicket-takers
-   - Turning points
+2. **Structure**
+   Organize every article into the following clear sections, each separated by a blank line:
 
-3. **Match Narrative** (2–3 short paragraphs):
-   - Each paragraph: 2–4 lines maximum
-   - One blank line between paragraphs
-   - Bold player names: <strong>Player Name</strong>
-   - Bold important scores and figures
-   - Describe innings, partnerships, collapses, turning moments
+   **Title**
+   - Use a strong, concise headline describing the key outcome.
+   - Capitalize properly and avoid all caps.
+   - Format as <h1>Title Here</h1>
 
-4. **Top Performers** (bullet list):
-   - Bold format: <strong>Player Name – Performance Stats</strong>
-   - Include top batsmen and bowlers
+   **Quick Summary**
+   - 4–5 short bullet points summarizing match highlights (scores, performers, milestones).
+   - Format as <h2>Quick Summary</h2> followed by <ul><li> items
+   - Bold player names and stats: <strong>Player Name – Runs/Wickets (Balls)</strong>
 
-5. **Post-Match Context** (1–2 short paragraphs):
-   - Series/tournament implications
-   - Upcoming fixtures
-   - Brief analysis
+   **Match Narrative**
+   - 2–3 paragraphs describing key phases of the match (early collapse, partnerships, turning points).
+   - Mention both batting and bowling efforts.
+   - Format as <h2>Match Narrative</h2> followed by <p> paragraphs
+   - Bold all player names, team names, and key stats
 
-HTML FORMATTING RULES:
-- Use <h2> for main section headers (Quick Summary, Match Narrative, etc.)
-- Use <p> tags for all paragraphs with proper spacing
-- Use <ul> and <li> for bullet points
-- Bold all player names using <strong>Name</strong>
-- Bold all scores using <strong>Score (Balls)</strong>
-- Bold match highlights and key figures
-- Insert blank line between every paragraph
-- Keep paragraphs short (2–4 lines each)
-- Professional, factual tone
-- Return ONLY clean HTML without code fences
+   **Top Performers**
+   - Bullet list of top player stats in the format:
+     <strong>Player Name – Runs/Wickets (Balls)</strong>
+     Example: <strong>Ashleigh Gardner – 104* (73)</strong>, <strong>Annabel Sutherland – 98* (112)</strong>
+   - Format as <h2>Top Performers</h2> followed by <ul><li> items
+
+   **Post-Match Context**
+   - 1–2 paragraphs explaining how the result affects the standings or tournament scenario.
+   - Format as <h2>Post-Match Context</h2> followed by <p> paragraphs
+
+   **Conclusion**
+   - End with a strong paragraph summarizing the importance of the win and key takeaways.
+   - Can be included in Post-Match Context or as a final paragraph
+
+3. **Formatting Rules**
+   - Add **one blank line** between all paragraphs in HTML (proper spacing between tags).
+   - Bold player names, team names, and major stats using <strong> tags.
+   - Use short, crisp sentences for readability.
+   - Avoid extra symbols, brackets, or unnecessary line breaks.
+   - Never merge all content into one block of text.
+   - Maintain a professional, news-style tone.
+
+4. **Content Accuracy**
+   - Retain all factual details from the input (runs, overs, players, match outcomes).
+   - Do not invent or modify statistics.
+
+5. **Output**
+   - Output clean HTML ready for CMS input.
+   - Preserve all paragraph breaks exactly as specified.
+   - Return ONLY the formatted HTML without code fences or markdown.
 
 RAW MATCH NOTES:
 ${content}
