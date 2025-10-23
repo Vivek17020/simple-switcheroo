@@ -365,30 +365,57 @@ JSON OUTPUT (no code fences):`
 
       case 'format-cricket':
         try {
-          const cricketPrompt = `You are a professional cricket news editor. Format the following raw cricket match notes into a complete, polished match report like those on ESPN Cricinfo, Cricbuzz, or NDTV Sports.
+          const cricketPrompt = `You are a professional cricket news editor and content cleaner. Transform raw cricket match notes into a perfectly formatted, clean match report for website display.
+
+CRITICAL CLEANING REQUIREMENTS:
+1. Fix ALL grammar, spacing, and punctuation errors
+2. Remove ALL duplicate or repeated phrases (e.g., "AustraliaAustralia", "the seven-time world champions" appearing multiple times)
+3. Remove broken words and merge fragmented text
+4. Eliminate redundant repetition while keeping unique information
+5. Ensure perfect sentence structure and flow
 
 FORMATTING STRUCTURE:
 
-1. **Headline**: Short and impactful (team names + outcome)
-2. **Subheadline / Opening Summary**: 1–2 sentences with final scores and key performers
-3. **Quick Summary**: Bullet points with 3–5 key takeaways (top scorers, wickets, turning points)
-4. **Match Narrative**: Paragraphs detailing how match unfolded - batting innings, bowling spells, turning points, partnerships, collapses, momentum shifts
-5. **Top Performers**: Highlight top batsmen and bowlers
-6. **Post-Match Context**: Series/tournament implications and upcoming fixtures
-7. **Quotes**: If any quotes included, format cleanly with attribution
+1. **Title**: Short, impactful headline at the top (team names + outcome)
+   
+2. **Quick Summary** (as bullet list):
+   - 3–5 key takeaways
+   - Top scorers with bold names and scores: <strong>Player Name – Score (Balls)</strong>
+   - Key wicket-takers
+   - Turning points
 
-STYLE GUIDELINES:
-- Neutral journalistic tone
-- Professional news writing
-- Use HTML formatting: <h2>, <h3>, <p>, <strong>, <ul>, <li>
-- Bold key player names and scores using <strong>
-- Proper paragraph structure
-- Return ONLY the formatted HTML without code fences
+3. **Match Narrative** (2–3 short paragraphs):
+   - Each paragraph: 2–4 lines maximum
+   - One blank line between paragraphs
+   - Bold player names: <strong>Player Name</strong>
+   - Bold important scores and figures
+   - Describe innings, partnerships, collapses, turning moments
+
+4. **Top Performers** (bullet list):
+   - Bold format: <strong>Player Name – Performance Stats</strong>
+   - Include top batsmen and bowlers
+
+5. **Post-Match Context** (1–2 short paragraphs):
+   - Series/tournament implications
+   - Upcoming fixtures
+   - Brief analysis
+
+HTML FORMATTING RULES:
+- Use <h2> for main section headers (Quick Summary, Match Narrative, etc.)
+- Use <p> tags for all paragraphs with proper spacing
+- Use <ul> and <li> for bullet points
+- Bold all player names using <strong>Name</strong>
+- Bold all scores using <strong>Score (Balls)</strong>
+- Bold match highlights and key figures
+- Insert blank line between every paragraph
+- Keep paragraphs short (2–4 lines each)
+- Professional, factual tone
+- Return ONLY clean HTML without code fences
 
 RAW MATCH NOTES:
 ${content}
 
-FORMATTED CRICKET MATCH REPORT (HTML only, no code fences):`
+FORMATTED CRICKET MATCH REPORT (clean HTML only, no code fences):`
 
           const formattedReport = await callLovableAI(cricketPrompt)
           
