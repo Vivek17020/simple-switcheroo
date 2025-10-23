@@ -293,7 +293,7 @@ Tags (comma-separated):`
 
       case 'format-and-extract-all':
         try {
-          const allInOnePrompt = `You are an expert SEO content editor. Analyze and process the following article content to extract ALL the following information in a single response.
+          const allInOnePrompt = `You are an expert SEO content editor and content cleaner. Analyze and process the following article content to extract ALL the following information in a single response.
 
 RETURN ONLY A VALID JSON OBJECT with these exact keys (no markdown, no code fences):
 
@@ -306,20 +306,33 @@ RETURN ONLY A VALID JSON OBJECT with these exact keys (no markdown, no code fenc
   "formatted_content": "Full SEO-formatted HTML content with proper structure"
 }
 
-REQUIREMENTS:
+CRITICAL CLEANING REQUIREMENTS:
+1. Remove ALL duplicate or repeated words, phrases, names (e.g., "andand", "the the")
+2. Fix all grammar, punctuation, and sentence structure errors
+3. Maintain proper paragraph spacing - every paragraph separated by blank line
+4. Remove unwanted symbols, broken words, and extra spaces
+5. Do NOT merge unrelated sentences into one line
+6. Preserve section headers as <h2> or <h3> tags
+7. Convert lists to proper <ul> and <li> bullet points
+8. Remove all redundant content while keeping all unique information
+9. Ensure perfect readability and professional formatting
+
+FORMATTING REQUIREMENTS:
 - Title: Compelling, newsworthy, 5-15 words
 - Excerpt: Under 300 characters, captures main points concisely
 - Meta Title: Max 60 chars, includes main keyword
 - Meta Description: 120-160 chars, includes keyword naturally
 - Tags: 8-15 lowercase, specific, searchable terms
 - Formatted Content: 
+  * Clean, duplicate-free text
   * Proper HTML headings (<h2>, <h3>)
   * Main keywords wrapped in <strong> tags
-  * Proper paragraph tags (<p>)
+  * Proper paragraph tags (<p>) with blank lines between
   * Bullet lists with <ul> and <li> where appropriate
   * Internal link placeholders: <a href="[internal-link-placeholder]">keyword</a>
   * Image placeholders: <!-- image: topic_keyword -->
-  * Human-readable, grammatically correct, SEO-optimized
+  * Perfect grammar, no duplicates, professional structure
+  * Human-readable, SEO-optimized
 
 CONTENT TO PROCESS:
 ${content.slice(0, 5000)}
