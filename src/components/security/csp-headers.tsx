@@ -13,11 +13,10 @@ export function CSPHeaders() {
 
     const prodDirectives = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://cdn.ampproject.org https://unpkg.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.ampproject.org https://unpkg.com",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https: blob:",
       "font-src 'self' https:",
-      // Allow Supabase and same-origin connections in production
       "connect-src 'self' https://tadcyglvsjycpgsjkywj.supabase.co wss://tadcyglvsjycpgsjkywj.supabase.co",
       "media-src 'self' https:",
       "object-src 'none'",
