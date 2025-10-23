@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Performance & Caching -->
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    
+    <!-- Critical CSS and Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <title>TheBulletinBriefs - Latest Breaking News & Updates</title>
+    <meta name="description" content="Stay informed with the latest breaking news, politics, technology, business, sports, and entertainment from around the world. Mobile-first news platform." />
+    <meta name="author" content="TheBulletinBriefs Editorial Team" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="keywords" content="breaking news, politics, technology, business, sports, entertainment, world news, current events, analysis">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="1 day">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://thebulletinbriefs.in/">
+    
+    <!-- Performance hints -->
+    <link rel="preload" as="script" href="/src/main.tsx">
+    <link rel="prefetch" as="document" href="/category/politics">
+    <link rel="prefetch" as="document" href="/category/technology">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="TheBulletinBriefs - Latest Breaking News & Updates" />
+    <meta property="og:description" content="Stay informed with breaking news, politics, technology, business, sports and entertainment updates from around the world." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://thebulletinbriefs.in/" />
+    <meta property="og:image" content="https://thebulletinbriefs.in/og-image.jpg" />
+    <meta property="og:site_name" content="TheBulletinBriefs">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@thebulletinbriefs" />
+    <meta name="twitter:title" content="TheBulletinBriefs - Latest Breaking News" />
+    <meta name="twitter:description" content="Stay informed with breaking news, politics, technology, business, sports and entertainment updates." />
+    <meta name="twitter:image" content="https://thebulletinbriefs.in/og-image.jpg" />
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/tb-briefs-favicon.png" type="image/png">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" sizes="180x180" href="/tb-briefs-favicon.png">
+    
+    <!-- Google Reader Revenue Manager (Beta) -->
+    <script async type="application/javascript"
+            src="https://news.google.com/swg/js/v1/swg-basic.js"></script>
+    <script>
+      (self.SWG_BASIC = self.SWG_BASIC || []).push(basicSubscriptions => {
+        basicSubscriptions.init({
+          type: 'NewsArticle',
+          isPartOfType: ['Product'],
+          isPartOfProductId: 'CAowgNjBDA:openaccess',
+          clientOptions: { theme: 'light', lang: 'en' },
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+
+    <script>
+    function reapplyTranslator() {
+      if (window.google && google.translate && google.translate.TranslateElement) {
+        try {
+          new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+        } catch (e) { console.log('Translate refresh failed', e); }
+      }
+    }
+
+    (function() {
+      const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          for (const node of mutation.addedNodes) {
+            if (node.nodeType === 1 && (
+              node.matches('.article-content') ||
+              node.matches('#cms-article') ||
+              node.querySelector('.article-content') ||
+              node.querySelector('#cms-article')
+            )) {
+              setTimeout(reapplyTranslator, 500);
+            }
+          }
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    })();
+    </script>
+  </body>
+</html>
