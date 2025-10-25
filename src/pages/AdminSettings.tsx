@@ -4,6 +4,8 @@ import { VAPIDGenerator } from '@/components/pwa/vapid-generator';
 import { SecurityNotice } from '@/components/security/security-notice';
 import { SecurityAuditReport } from '@/components/security/security-audit-report';
 import { OneSignalTestNotification } from '@/components/admin/onesignal-test-notification';
+import { OneSignalAnalytics } from '@/components/admin/onesignal-analytics';
+import { OneSignalIntegrationCheck } from '@/components/admin/onesignal-integration-check';
 import { Settings, Shield, Bell, Database } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { Navigate } from 'react-router-dom';
@@ -60,7 +62,9 @@ export default function AdminSettings() {
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-6">
+          <OneSignalAnalytics />
           <OneSignalTestNotification />
+          <OneSignalIntegrationCheck />
           <VAPIDGenerator />
         </TabsContent>
 

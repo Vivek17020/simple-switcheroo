@@ -21,20 +21,44 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
-    let notificationData;
+    let notificationData: any;
 
     if (isTest) {
       // Test notification
       notificationData = {
         title: '📰 Test Notification',
         url: 'https://thebulletinbriefs.in',
-        message: 'This is a test notification from The Bulletin Briefs!'
+        message: 'This is a test notification from The Bulletin Briefs!',
+        imageUrl: 'https://thebulletinbriefs.in/og-image.jpg'
       };
     } else {
-      // Fetch the article
+      // Check throttling - max 1 notification per hour
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+      const { data: recentNotifications } = await supabaseClient
+        .from('seo_automation_logs')
+        .select('created_at')
+        .eq('action_type', 'push_notification')
+        .eq('service_name', 'onesignal')
+        .gte('created_at', oneHourAgo)
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      if (recentNotifications && recentNotifications.length > 0) {
+        console.log('Notification throttled - less than 1 hour since last notification');
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            message: 'Notification throttled - too soon since last notification',
+            throttled: true
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Fetch the article with image
       const { data: article, error } = await supabaseClient
         .from("articles")
-        .select("title, slug, excerpt")
+        .select("title, slug, excerpt, image_url")
         .eq("id", articleId)
         .eq("published", true)
         .single();
@@ -45,13 +69,14 @@ serve(async (req) => {
       }
 
       notificationData = {
-        title: `📰 New Article: ${article.title}`,
+        title: `📰 ${article.title}`,
         url: `https://thebulletinbriefs.in/article/${article.slug}`,
-        message: article.excerpt || article.title
+        message: article.excerpt || article.title,
+        imageUrl: article.image_url || 'https://thebulletinbriefs.in/og-image.jpg'
       };
     }
 
-    // Send OneSignal notification
+    // Send OneSignal notification with rich media
     const oneSignalApiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
     if (!oneSignalApiKey) {
       throw new Error('ONESIGNAL_REST_API_KEY not configured');
@@ -73,6 +98,15 @@ serve(async (req) => {
           en: notificationData.title
         },
         url: notificationData.url,
+        large_icon: 'https://thebulletinbriefs.in/logo.png',
+        chrome_web_icon: 'https://thebulletinbriefs.in/tb-briefs-favicon.png',
+        chrome_web_badge: 'https://thebulletinbriefs.in/tb-briefs-favicon.png',
+        chrome_web_image: notificationData.imageUrl,
+        buttons: [
+          { id: 'read', text: 'Read Now', icon: 'ic_menu_view' },
+          { id: 'save', text: 'Save for Later', icon: 'ic_menu_save' }
+        ],
+        ttl: 86400, // 24 hours
       }),
     });
 

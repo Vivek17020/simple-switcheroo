@@ -38,13 +38,38 @@
       OneSignalDeferred.push(async function(OneSignal) {
         await OneSignal.init({
           appId: "1ace9244-6c2b-4b2c-852f-1583c1ff0f72",
+          serviceWorkerParam: { scope: '/' },
+          serviceWorkerPath: 'OneSignalSDKWorker.js',
           notifyButton: {
             enable: true,
             position: 'bottom-right',
+            size: 'medium',
+            theme: 'default',
             text: {
               'tip.state.unsubscribed': 'Get notifications for new articles!',
               'tip.state.subscribed': "You're subscribed to updates.",
+              'tip.state.blocked': "You've blocked notifications",
             },
+          },
+          promptOptions: {
+            slidedown: {
+              prompts: [
+                {
+                  type: "push",
+                  autoPrompt: true,
+                  timeDelay: 8,
+                  text: {
+                    actionMessage: "📰 Get instant breaking news updates from The Bulletin Briefs!",
+                    acceptButton: "Allow",
+                    cancelButton: "No Thanks",
+                  },
+                },
+              ],
+            },
+          },
+          welcomeNotification: {
+            title: "Thanks for subscribing!",
+            message: "You'll now receive the latest news updates instantly.",
           },
         });
       });
