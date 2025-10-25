@@ -130,6 +130,35 @@ serve(async (req) => {
           status: 'success',
           retry_count: 0,
         });
+
+      // Update push analytics
+      const today = new Date().toISOString().split('T')[0];
+      const recipients = result.recipients || 0;
+      
+      // Try to update existing record or insert new one
+      const { data: existingRecord } = await supabaseClient
+        .from('push_analytics')
+        .select('*')
+        .eq('date', today)
+        .single();
+
+      if (existingRecord) {
+        await supabaseClient
+          .from('push_analytics')
+          .update({
+            delivered: (existingRecord.delivered || 0) + recipients,
+            subscribers: recipients, // Update latest subscriber count
+          })
+          .eq('date', today);
+      } else {
+        await supabaseClient
+          .from('push_analytics')
+          .insert({
+            date: today,
+            delivered: recipients,
+            subscribers: recipients,
+          });
+      }
     }
 
     return new Response(

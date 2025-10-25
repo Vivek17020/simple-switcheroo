@@ -40,7 +40,7 @@ export function OneSignalIntegrationCheck() {
 
       // Check 2: OneSignal SDK
       await new Promise(resolve => setTimeout(resolve, 500));
-      const oneSignalLoaded = typeof window.OneSignal !== 'undefined';
+      const oneSignalLoaded = typeof (window as any).OneSignal !== 'undefined';
       checks[1] = {
         name: 'OneSignal SDK',
         status: oneSignalLoaded ? 'pass' : 'fail',

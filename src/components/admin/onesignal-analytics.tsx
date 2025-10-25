@@ -29,7 +29,7 @@ export function OneSignalAnalytics() {
     try {
       // Fetch analytics from push_analytics table
       const { data, error } = await supabase
-        .from('push_analytics')
+        .from('push_analytics' as any)
         .select('*')
         .order('date', { ascending: false })
         .limit(7);
@@ -37,7 +37,7 @@ export function OneSignalAnalytics() {
       if (error) throw error;
 
       if (data) {
-        const formattedData = data.map(d => ({
+        const formattedData = data.map((d: any) => ({
           date: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
           delivered: d.delivered || 0,
           clicks: d.clicks || 0,
@@ -47,15 +47,16 @@ export function OneSignalAnalytics() {
         setAnalytics(formattedData);
 
         // Calculate totals
-        const totalDelivered = data.reduce((sum, d) => sum + (d.delivered || 0), 0);
-        const totalClicks = data.reduce((sum, d) => sum + (d.clicks || 0), 0);
+        const totalDelivered = data.reduce((sum: number, d: any) => sum + (d.delivered || 0), 0);
+        const totalClicks = data.reduce((sum: number, d: any) => sum + (d.clicks || 0), 0);
         const avgCtr = totalDelivered > 0 ? (totalClicks / totalDelivered) * 100 : 0;
 
+        const latestData = data[0] as any;
         setTotals({
           totalDelivered,
           totalClicks,
           avgCtr: Math.round(avgCtr * 10) / 10,
-          subscribers: data[0]?.subscribers || 0,
+          subscribers: latestData?.subscribers || 0,
         });
       }
     } catch (error) {

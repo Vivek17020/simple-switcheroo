@@ -860,6 +860,39 @@ export type Database = {
         }
         Relationships: []
       }
+      push_analytics: {
+        Row: {
+          clicks: number
+          created_at: string
+          ctr: number
+          date: string
+          delivered: number
+          id: string
+          subscribers: number
+          updated_at: string
+        }
+        Insert: {
+          clicks?: number
+          created_at?: string
+          ctr?: number
+          date: string
+          delivered?: number
+          id?: string
+          subscribers?: number
+          updated_at?: string
+        }
+        Update: {
+          clicks?: number
+          created_at?: string
+          ctr?: number
+          date?: string
+          delivered?: number
+          id?: string
+          subscribers?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       push_subscriptions: {
         Row: {
           auth: string
