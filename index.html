@@ -2,17 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     
-    <!-- Performance & Caching -->
-    <meta http-equiv="Cache-Control" content="public, max-age=31536000">
+    <!-- Performance & Caching - Optimized headers -->
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable">
+    
+    <!-- Preconnect to critical origins - Faster DNS/TLS -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
-    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
-    
-    <!-- Critical CSS and Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+    <link rel="preconnect" href="https://tadcyglvsjycpgsjkywj.supabase.co" />
+    <link rel="dns-prefetch" href="//cdn.onesignal.com" />
+    <link rel="dns-prefetch" href="//news.google.com" />
     
     <title>TheBulletinBriefs - Latest Breaking News & Updates</title>
     <meta name="description" content="Stay informed with the latest breaking news, politics, technology, business, sports, and entertainment from around the world. Mobile-first news platform." />
@@ -26,12 +26,15 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://thebulletinbriefs.in/">
     
-    <!-- Performance hints -->
-    <link rel="preload" as="script" href="/src/main.tsx">
-    <link rel="prefetch" as="document" href="/category/politics">
-    <link rel="prefetch" as="document" href="/category/technology">
+    <!-- Performance hints - Optimized resource loading -->
+    <link rel="modulepreload" href="/src/main.tsx">
+    <link rel="prefetch" href="/category/politics" as="document">
+    <link rel="prefetch" href="/category/technology" as="document">
+    
+    <!-- Preload critical images (logo) -->
+    <link rel="preload" as="image" href="/logo.png" fetchpriority="high">
 
-    <!-- OneSignal Web Push Notifications SDK -->
+    <!-- OneSignal Web Push Notifications SDK - Async loading -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -98,26 +101,48 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="/tb-briefs-favicon.png">
     
-    <!-- Google Reader Revenue Manager (Beta) -->
-    <script async type="application/javascript"
-            src="https://news.google.com/swg/js/v1/swg-basic.js"></script>
+    <!-- Google Reader Revenue Manager (Beta) - Deferred for performance -->
     <script>
-      (self.SWG_BASIC = self.SWG_BASIC || []).push(basicSubscriptions => {
-        basicSubscriptions.init({
-          type: 'NewsArticle',
-          isPartOfType: ['Product'],
-          isPartOfProductId: 'CAowgNjBDA:openaccess',
-          clientOptions: { theme: 'light', lang: 'en' },
-        });
+      // Defer Google RRM to not block rendering
+      window.addEventListener('load', function() {
+        const script = document.createElement('script');
+        script.src = 'https://news.google.com/swg/js/v1/swg-basic.js';
+        script.async = true;
+        script.onload = function() {
+          (self.SWG_BASIC = self.SWG_BASIC || []).push(basicSubscriptions => {
+            basicSubscriptions.init({
+              type: 'NewsArticle',
+              isPartOfType: ['Product'],
+              isPartOfProductId: 'CAowgNjBDA:openaccess',
+              clientOptions: { theme: 'light', lang: 'en' },
+            });
+          });
+        };
+        document.head.appendChild(script);
       });
     </script>
   </head>
 
   <body>
     <div id="root"></div>
+    
+    <!-- Main app bundle - module preload already declared -->
     <script type="module" src="/src/main.tsx"></script>
 
+    <!-- Google Translate - Deferred to not block rendering -->
     <script>
+    // Load Google Translate after page is interactive
+    window.addEventListener('load', function() {
+      const script = document.createElement('script');
+      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      script.async = true;
+      document.body.appendChild(script);
+    });
+    
+    window.googleTranslateElementInit = function() {
+      new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+    };
+    
     function reapplyTranslator() {
       if (window.google && google.translate && google.translate.TranslateElement) {
         try {

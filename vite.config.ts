@@ -54,11 +54,32 @@ export default defineConfig(({ mode }) => {
       commonjsOptions: {
         include: [/node_modules/],
       },
+      cssCodeSplit: true,
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+        },
+      },
       rollupOptions: {
         output: {
           manualChunks: {
             'react-vendor': ['react', 'react-dom'],
+            'router': ['react-router-dom'],
+            'ui': ['@radix-ui/react-dropdown-menu', '@radix-ui/react-dialog', '@radix-ui/react-popover'],
+            'supabase': ['@supabase/supabase-js'],
           },
+          assetFileNames: (assetInfo) => {
+            if (!assetInfo.name) return 'assets/[name]-[hash][extname]';
+            let extType = assetInfo.name.split('.').at(1) || '';
+            if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
+              extType = 'images';
+            }
+            return `assets/${extType}/[name]-[hash][extname]`;
+          },
+          chunkFileNames: 'assets/js/[name]-[hash].js',
+          entryFileNames: 'assets/js/[name]-[hash].js',
         },
       },
     },

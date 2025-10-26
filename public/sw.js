@@ -1,14 +1,17 @@
-// Service Worker for TheBulletinBriefs PWA
-const CACHE_NAME = 'bulletin-briefs-v2';
-const STATIC_CACHE = 'bulletin-static-v2';
-const DYNAMIC_CACHE = 'bulletin-dynamic-v2';
+// Service Worker for TheBulletinBriefs PWA - Optimized for Performance
+const CACHE_VERSION = 'v3';
+const CACHE_NAME = `bulletin-briefs-${CACHE_VERSION}`;
+const STATIC_CACHE = `bulletin-static-${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `bulletin-dynamic-${CACHE_VERSION}`;
+const IMAGE_CACHE = `bulletin-images-${CACHE_VERSION}`;
 
 // Assets to cache immediately
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
   '/offline.html',
-  // Add other static assets as needed
+  '/logo.png',
+  '/tb-briefs-favicon.png',
 ];
 
 // Install event - cache static assets
@@ -98,13 +101,18 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-first strategy for static assets (JS, CSS, images)
+  // Cache-first strategy for static assets with smart caching
+  const isImage = request.destination === 'image' || /\.(jpg|jpeg|png|gif|webp|avif|svg)$/i.test(request.url);
+  const cacheName = isImage ? IMAGE_CACHE : DYNAMIC_CACHE;
+  
   event.respondWith(
     caches.match(request)
       .then(cachedResponse => {
         if (cachedResponse) {
-          // Return cached version and update cache in background
-          updateCache(request);
+          // Return cached version and update cache in background for non-images
+          if (!isImage) {
+            updateCache(request);
+          }
           return cachedResponse;
         }
         
@@ -118,7 +126,7 @@ self.addEventListener('fetch', (event) => {
             
             // Cache successful responses
             const responseToCache = response.clone();
-            caches.open(DYNAMIC_CACHE)
+            caches.open(cacheName)
               .then(cache => {
                 cache.put(request, responseToCache);
               });
@@ -126,6 +134,13 @@ self.addEventListener('fetch', (event) => {
             return response;
           })
           .catch(() => {
+            // Return placeholder for images
+            if (isImage) {
+              return new Response(
+                '<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg"><rect fill="#f0f0f0" width="400" height="300"/><text x="50%" y="50%" text-anchor="middle" fill="#999">Image unavailable</text></svg>',
+                { headers: { 'Content-Type': 'image/svg+xml' } }
+              );
+            }
             return new Response('Offline', { status: 503 });
           });
       })
@@ -212,16 +227,24 @@ async function syncOfflineActions() {
   console.log('Syncing offline actions...');
 }
 
-// Cache size management
+// Cache size management - Improved with separate image cache
 async function cleanupCache() {
-  const cache = await caches.open(DYNAMIC_CACHE);
-  const keys = await cache.keys();
+  // Clean dynamic cache
+  const dynamicCache = await caches.open(DYNAMIC_CACHE);
+  const dynamicKeys = await dynamicCache.keys();
+  if (dynamicKeys.length > 50) {
+    const keysToDelete = dynamicKeys.slice(0, dynamicKeys.length - 50);
+    await Promise.all(keysToDelete.map(key => dynamicCache.delete(key)));
+  }
   
-  if (keys.length > 100) { // Keep max 100 items
-    const keysToDelete = keys.slice(0, keys.length - 100);
-    await Promise.all(keysToDelete.map(key => cache.delete(key)));
+  // Clean image cache
+  const imageCache = await caches.open(IMAGE_CACHE);
+  const imageKeys = await imageCache.keys();
+  if (imageKeys.length > 100) {
+    const keysToDelete = imageKeys.slice(0, imageKeys.length - 100);
+    await Promise.all(keysToDelete.map(key => imageCache.delete(key)));
   }
 }
 
-// Run cleanup periodically
-setInterval(cleanupCache, 60000); // Every minute
+// Run cleanup when service worker is idle
+self.addEventListener('idle', cleanupCache);
