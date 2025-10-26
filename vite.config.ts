@@ -21,11 +21,13 @@ export default defineConfig(({ mode }) => {
       dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
     },
     optimizeDeps: {
-      force: true, // Force re-optimization
       include: [
         "react",
         "react-dom",
         "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+        "next-themes",
+        "react-router-dom",
         "@radix-ui/react-dropdown-menu",
         "@radix-ui/react-slot",
         "@radix-ui/react-separator",
