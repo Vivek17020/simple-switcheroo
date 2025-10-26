@@ -4,6 +4,12 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, XCircle, RefreshCw, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
+declare global {
+  interface Window {
+    OneSignal?: any;
+  }
+}
+
 interface CheckResult {
   name: string;
   status: 'pass' | 'fail' | 'checking';
@@ -40,7 +46,7 @@ export function OneSignalIntegrationCheck() {
 
       // Check 2: OneSignal SDK
       await new Promise(resolve => setTimeout(resolve, 500));
-      const oneSignalLoaded = typeof (window as any).OneSignal !== 'undefined';
+      const oneSignalLoaded = typeof window.OneSignal !== 'undefined';
       checks[1] = {
         name: 'OneSignal SDK',
         status: oneSignalLoaded ? 'pass' : 'fail',

@@ -11,6 +11,17 @@ interface AnalyticsData {
   ctr: number;
 }
 
+interface PushAnalyticsRow {
+  id: string;
+  date: string;
+  delivered: number;
+  clicks: number;
+  ctr: number;
+  subscribers: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export function OneSignalAnalytics() {
   const [analytics, setAnalytics] = useState<AnalyticsData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +48,8 @@ export function OneSignalAnalytics() {
       if (error) throw error;
 
       if (data) {
-        const formattedData = data.map((d: any) => ({
+        const typedData = data as unknown as PushAnalyticsRow[];
+        const formattedData = typedData.map((d) => ({
           date: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
           delivered: d.delivered || 0,
           clicks: d.clicks || 0,
@@ -47,11 +59,11 @@ export function OneSignalAnalytics() {
         setAnalytics(formattedData);
 
         // Calculate totals
-        const totalDelivered = data.reduce((sum: number, d: any) => sum + (d.delivered || 0), 0);
-        const totalClicks = data.reduce((sum: number, d: any) => sum + (d.clicks || 0), 0);
+        const totalDelivered = typedData.reduce((sum, d) => sum + (d.delivered || 0), 0);
+        const totalClicks = typedData.reduce((sum, d) => sum + (d.clicks || 0), 0);
         const avgCtr = totalDelivered > 0 ? (totalClicks / totalDelivered) * 100 : 0;
 
-        const latestData = data[0] as any;
+        const latestData = typedData[0];
         setTotals({
           totalDelivered,
           totalClicks,
