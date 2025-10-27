@@ -64,11 +64,16 @@ export default function CategoryPage() {
   const isJobsSubcategoryView = parentCategory?.slug === 'jobs' || (categorySlug && categories?.some(c => c.slug === 'jobs' && c.subcategories?.some(s => s.slug === categorySlug)));
   const article = articlesData?.articles?.[0];
   
+  // Normalize and dedupe category display name (prevents "Football Football" etc.)
+  const dedupeAdjacentWords = (str: string) => str.replace(/\b(\w+)(\s+\1\b)+/gi, '$1').trim();
+  const displayName = dedupeAdjacentWords(category?.name ?? '');
+  const baseTitle = isJobsSubcategoryView ? displayName : `${displayName} News`;
+  
   // Generate breadcrumb data
   const breadcrumbItems = [
     { name: "Home", url: window.location.origin },
     ...(parentCategory ? [{ name: parentCategory.name, url: `${window.location.origin}/category/${parentCategory.slug}` }] : []),
-    { name: category?.name || "", url: window.location.href }
+    { name: displayName || "", url: window.location.href }
   ];
 
   if (!category) {
@@ -95,19 +100,19 @@ export default function CategoryPage() {
       <BreadcrumbSchema items={breadcrumbItems} />
       
       <SEOHead
-        title={`${category.name} News - TheBulletinBriefs`}
-        description={category.description || `Latest ${category.name.toLowerCase()} news and articles from TheBulletinBriefs.`}
+        title={`${baseTitle} - TheBulletinBriefs`}
+        description={category.description || `Latest ${displayName.toLowerCase()} news and articles from TheBulletinBriefs.`}
         type="website"
         structuredData={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
-          name: `${category.name} News`,
+          name: baseTitle,
           description: category.description,
           url: `${window.location.origin}/category/${category.slug}`,
           mainEntity: {
             "@type": "ItemList",
-            name: `${category.name} Articles`,
-            description: `Latest articles in ${category.name}`
+            name: `${displayName} Articles`,
+            description: `Latest articles in ${displayName}`
           }
         }}
       />
@@ -147,7 +152,7 @@ export default function CategoryPage() {
                 <ChevronRight className="h-4 w-4" />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
-                <BreadcrumbPage>{category.name}</BreadcrumbPage>
+                <BreadcrumbPage>{displayName}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -157,7 +162,7 @@ export default function CategoryPage() {
             <div className="flex items-center justify-center gap-2 mb-4">
               <FileText className="h-8 w-8 text-primary" />
               <h1 className="text-4xl md:text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                {category.name} {!isJobsSubcategoryView && 'News'}
+                {baseTitle}
               </h1>
             </div>
             {category.description && (
