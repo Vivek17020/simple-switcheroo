@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
+
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CSPHeaders } from "@/components/security/csp-headers";
@@ -58,7 +58,7 @@ const AdminNewAdmitCard = lazy(() => import("@/pages/AdminNewAdmitCard"));
 
 const App = () => {
   return (
-    <HelmetProvider>
+    <>
       <CriticalCSSInline />
       <OptimizedFonts />
       <PerformanceMonitor />
@@ -137,7 +137,7 @@ const App = () => {
           </TranslationProvider>
         </AuthProvider>
       </ThemeProvider>
-    </HelmetProvider>
+    </>
   );
 };
 
