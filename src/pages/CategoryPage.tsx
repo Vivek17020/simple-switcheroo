@@ -31,13 +31,13 @@ export default function CategoryPage() {
   const categorySlug = childSlug || slug;
   const { data: categories } = useCategories();
   
-  // For Jobs subcategories, fetch the oldest article (first posted)
+  // Check if this is a Jobs subcategory - fetch oldest (first) article
   const isJobsSubcategory = parentSlug === 'jobs';
   const { data: articlesData, isLoading: articlesLoading } = useArticles(
     categorySlug, 
     1, 
-    1,
-    isJobsSubcategory ? 'oldest' : undefined
+    isJobsSubcategory ? 1 : 12,
+    isJobsSubcategory ? 'oldest' : 'newest'
   );
   const contentRef = useRef<HTMLElement>(null);
   const { currentLanguage } = useTranslation();

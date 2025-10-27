@@ -119,10 +119,10 @@ function generateSitemap(articles: Article[], categories: Category[]) {
   </url>`;
   });
 
-  // Category pages
+  // Category pages with proper URL structure
   categories.forEach(category => {
-    // For subcategories, use nested URL structure with parent slug
     if (category.parent_id) {
+      // Subcategories: use /{parent-slug}/{subcategory-slug}
       const parent = categories.find(c => c.id === category.parent_id);
       if (parent) {
         urls += `
@@ -134,7 +134,7 @@ function generateSitemap(articles: Article[], categories: Category[]) {
   </url>`;
       }
     } else {
-      // Parent categories - only add if not filtering them out
+      // Parent categories: use /category/{slug}
       urls += `
   <url>
     <loc>${baseUrl}/category/${category.slug}</loc>

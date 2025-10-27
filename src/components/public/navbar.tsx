@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useCategories } from "@/hooks/use-articles";
-import { FileText, Menu, X, Search } from "lucide-react";
+import { FileText, Menu, X, Search, ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { SearchDialog } from "@/components/public/search-dialog";
@@ -13,10 +13,22 @@ export function Navbar() {
   const { data: categories } = useCategories();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileOpenCategories, setMobileOpenCategories] = useState<Set<string>>(new Set());
 
-  // Jobs subcategories will be fetched dynamically from the database
+  // Jobs category for special handling
   const jobsCategory = categories?.find(cat => cat.slug === 'jobs');
   const jobsSubcategories = jobsCategory?.subcategories || [];
+
+  const toggleMobileCategory = (categoryId: string) => {
+    const newSet = new Set(mobileOpenCategories);
+    if (newSet.has(categoryId)) {
+      newSet.delete(categoryId);
+    } else {
+      newSet.add(categoryId);
+    }
+    setMobileOpenCategories(newSet);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -32,35 +44,65 @@ export function Navbar() {
               TheBulletinBriefs
             </span>
           </Link>
-          <nav className="flex items-center space-x-6 text-sm font-medium" data-no-translate>
+          
+          {/* Desktop Navigation */}
+          <nav className="flex items-center space-x-1" data-no-translate>
             <Link
               to="/"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
+              className="px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-accent/50 rounded-md transition-colors"
             >
               Home
             </Link>
+            
             {categories?.filter(category => category.slug !== 'jobs' && !category.name.startsWith('Jobs/')).map((category) => {
               const hasSubcategories = category.subcategories && category.subcategories.length > 0;
               
               if (hasSubcategories) {
                 return (
-                  <div key={category.id} className="relative group/category">
+                  <div 
+                    key={category.id} 
+                    className="relative"
+                    onMouseEnter={() => setActiveDropdown(category.id)}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
                     <Link
                       to={`/category/${category.slug}`}
-                      className="transition-all duration-200 hover:text-foreground hover:scale-105 text-foreground/60 cursor-pointer relative inline-block"
+                      className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-accent/50 rounded-md transition-colors"
                     >
                       {category.name}
-                      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-200 group-hover/category:w-full"></span>
+                      <ChevronDown className={cn(
+                        "h-3 w-3 transition-transform duration-200",
+                        activeDropdown === category.id && "rotate-180"
+                      )} />
                     </Link>
-                    <div className="absolute top-full left-0 mt-2 w-56 bg-background border border-border shadow-xl rounded-md opacity-0 invisible group-hover/category:opacity-100 group-hover/category:visible transition-all duration-200 z-[99999]" data-no-translate>
-                      <Link to={`/category/${category.slug}`} className="block px-4 py-2 text-sm hover:bg-accent rounded-t-md">
-                        All {category.name}
-                      </Link>
-                      {category.subcategories?.map((subcat: any) => (
-                        <Link key={subcat.id} to={`/${category.slug}/${subcat.slug}`} className="block px-4 py-2 text-sm hover:bg-accent last:rounded-b-md">
-                          {subcat.name}
+                    
+                    {/* Dropdown - Instant visibility on hover */}
+                    <div className={cn(
+                      "absolute left-0 top-full mt-1 w-56 transition-all duration-150 z-[100]",
+                      activeDropdown === category.id 
+                        ? "opacity-100 visible translate-y-0" 
+                        : "opacity-0 invisible -translate-y-2 pointer-events-none"
+                    )}>
+                      <div className="bg-popover/98 backdrop-blur-sm border border-border rounded-md shadow-lg py-1.5">
+                        <Link
+                          to={`/category/${category.slug}`}
+                          className="block px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent hover:text-primary transition-colors"
+                          onClick={() => setActiveDropdown(null)}
+                        >
+                          View All
                         </Link>
-                      ))}
+                        <div className="my-1 border-t border-border/50" />
+                        {category.subcategories?.map((subcategory) => (
+                          <Link
+                            key={subcategory.id}
+                            to={`/${category.slug}/${subcategory.slug}`}
+                            className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+                            onClick={() => setActiveDropdown(null)}
+                          >
+                            {subcategory.name}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 );
@@ -70,34 +112,57 @@ export function Navbar() {
                 <Link
                   key={category.id}
                   to={`/category/${category.slug}`}
-                  className="transition-colors hover:text-foreground/80 text-foreground/60"
+                  className="px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-accent/50 rounded-md transition-colors"
                 >
                   {category.name}
                 </Link>
               );
             })}
+            
+            {/* Jobs Category */}
             {jobsCategory && jobsSubcategories.length > 0 && (
-              <div className="relative group/jobs">
+              <div 
+                className="relative"
+                onMouseEnter={() => setActiveDropdown('jobs')}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
                 <Link
                   to="/category/jobs"
-                  className="transition-all duration-200 hover:text-foreground hover:scale-105 text-foreground/60 cursor-pointer relative inline-block"
+                  className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-accent/50 rounded-md transition-colors"
                 >
                   Jobs
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-200 group-hover/jobs:w-full"></span>
+                  <ChevronDown className={cn(
+                    "h-3 w-3 transition-transform duration-200",
+                    activeDropdown === 'jobs' && "rotate-180"
+                  )} />
                 </Link>
-                <div className="absolute top-full left-0 mt-2 w-56 bg-background border border-border shadow-xl rounded-md opacity-0 invisible group-hover/jobs:opacity-100 group-hover/jobs:visible transition-all duration-200 z-[99999]" data-no-translate>
-                  <Link to="/category/jobs" className="block px-4 py-2 text-sm hover:bg-accent rounded-t-md">
-                    All Jobs
-                  </Link>
-                  {jobsSubcategories.map((subcat: any) => (
+                
+                <div className={cn(
+                  "absolute left-0 top-full mt-1 w-56 transition-all duration-150 z-[100]",
+                  activeDropdown === 'jobs'
+                    ? "opacity-100 visible translate-y-0" 
+                    : "opacity-0 invisible -translate-y-2 pointer-events-none"
+                )}>
+                  <div className="bg-popover/98 backdrop-blur-sm border border-border rounded-md shadow-lg py-1.5">
                     <Link
-                      key={subcat.id}
-                      to={`/jobs/${subcat.slug}`}
-                      className="block px-4 py-2 text-sm hover:bg-accent last:rounded-b-md"
+                      to="/category/jobs"
+                      className="block px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent hover:text-primary transition-colors"
+                      onClick={() => setActiveDropdown(null)}
                     >
-                      {subcat.name}
+                      View All
                     </Link>
-                  ))}
+                    <div className="my-1 border-t border-border/50" />
+                    {jobsSubcategories.map((subcategory) => (
+                      <Link
+                        key={subcategory.id}
+                        to={`/jobs/${subcategory.slug}`}
+                        className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+                        onClick={() => setActiveDropdown(null)}
+                      >
+                        {subcategory.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -126,10 +191,8 @@ export function Navbar() {
         </Button>
 
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <div className="w-full flex-1 md:w-auto md:flex-none">
-            {/* Search functionality */}
-          </div>
-            <nav className="flex items-center space-x-2">
+          <div className="w-full flex-1 md:w-auto md:flex-none" />
+          <nav className="flex items-center space-x-2">
             <Button
               variant="ghost"
               size="sm"
@@ -146,63 +209,106 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile navigation */}
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden" data-no-translate>
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-border bg-background">
+        <div className="md:hidden border-t border-border bg-background/95 backdrop-blur-sm" data-no-translate>
+          <div className="px-4 py-3 space-y-2 max-h-[70vh] overflow-y-auto">
             <Link
               to="/"
-              className="block px-3 py-2 text-base font-medium text-foreground/60 hover:text-foreground"
+              className="block px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent/50 rounded-md transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
             </Link>
-            {categories?.filter(category => category.slug !== 'jobs' && !category.name.startsWith('Jobs/')).map((category: any) => (
-              <div key={category.id}>
+
+            {categories?.filter(category => category.slug !== 'jobs' && !category.name.startsWith('Jobs/')).map((category) => {
+              const hasSubcategories = category.subcategories && category.subcategories.length > 0;
+              const isOpen = mobileOpenCategories.has(category.id);
+
+              if (hasSubcategories) {
+                return (
+                  <div key={category.id} className="space-y-1">
+                    <button
+                      onClick={() => toggleMobileCategory(category.id)}
+                      className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent/50 rounded-md transition-colors"
+                    >
+                      <span>{category.name}</span>
+                      <ChevronDown className={cn(
+                        "h-4 w-4 transition-transform duration-200",
+                        isOpen && "rotate-180"
+                      )} />
+                    </button>
+                    {isOpen && (
+                      <div className="pl-4 space-y-1 py-1">
+                        <Link
+                          to={`/category/${category.slug}`}
+                          className="block px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent/50 rounded-md transition-colors"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          View All
+                        </Link>
+                        {category.subcategories?.map((subcategory) => (
+                          <Link
+                            key={subcategory.id}
+                            to={`/${category.slug}/${subcategory.slug}`}
+                            className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/30 rounded-md transition-colors"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {subcategory.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
                 <Link
+                  key={category.id}
                   to={`/category/${category.slug}`}
-                  className="block px-3 py-2 text-base font-medium text-foreground/60 hover:text-foreground"
+                  className="block px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent/50 rounded-md transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {category.name}
                 </Link>
-                {category.subcategories && category.subcategories.length > 0 && (
-                  <div className="pl-4">
-                    {category.subcategories.map((subcat: any) => (
+              );
+            })}
+
+            {/* Jobs in Mobile Menu */}
+            {jobsCategory && jobsSubcategories.length > 0 && (
+              <div className="space-y-1 border-t border-border pt-2 mt-2">
+                <button
+                  onClick={() => toggleMobileCategory('jobs')}
+                  className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent/50 rounded-md transition-colors"
+                >
+                  <span>Jobs</span>
+                  <ChevronDown className={cn(
+                    "h-4 w-4 transition-transform duration-200",
+                    mobileOpenCategories.has('jobs') && "rotate-180"
+                  )} />
+                </button>
+                {mobileOpenCategories.has('jobs') && (
+                  <div className="pl-4 space-y-1 py-1">
+                    <Link
+                      to="/category/jobs"
+                      className="block px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent/50 rounded-md transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      View All
+                    </Link>
+                    {jobsSubcategories.map((subcategory) => (
                       <Link
-                        key={subcat.id}
-                        to={`/${category.slug}/${subcat.slug}`}
-                        className="block px-3 py-2 text-sm text-foreground/60 hover:text-foreground"
+                        key={subcategory.id}
+                        to={`/jobs/${subcategory.slug}`}
+                        className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/30 rounded-md transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        {subcat.name}
+                        {subcategory.name}
                       </Link>
                     ))}
                   </div>
                 )}
-              </div>
-            ))}
-            {jobsCategory && jobsSubcategories.length > 0 && (
-              <div className="border-t border-border mt-2 pt-2">
-                <Link
-                  to="/category/jobs"
-                  className="block px-3 py-2 text-base font-medium text-foreground/60 hover:text-foreground"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Jobs
-                </Link>
-                <div className="pl-4">
-                  {jobsSubcategories.map((subcat: any) => (
-                    <Link
-                      key={subcat.id}
-                      to={`/jobs/${subcat.slug}`}
-                      className="block px-3 py-2 text-sm text-foreground/60 hover:text-foreground"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {subcat.name}
-                    </Link>
-                  ))}
-                </div>
               </div>
             )}
           </div>
