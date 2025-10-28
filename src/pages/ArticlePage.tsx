@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useArticle } from "@/hooks/use-articles";
 import { useTrackReading } from "@/hooks/use-reading-history";
@@ -19,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getFirstName } from "@/lib/utils";
 import { useAutoTranslate } from "@/hooks/use-auto-translate";
 import { useTranslation } from "@/contexts/TranslationContext";
+import { sanitizeHtml } from "@/lib/sanitize";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -137,6 +138,9 @@ export default function ArticlePage() {
     article.categories?.slug
   );
   const authorUsername = article.public_profiles?.username || article.profiles?.username;
+
+  // Sanitize content only when rendering to ensure proper formatting
+  const sanitizedContent = useMemo(() => sanitizeHtml(article.content), [article.content]);
 
   return (
     <>
@@ -280,7 +284,7 @@ export default function ArticlePage() {
 
             {/* Article Content */}
             <article className="prose prose-lg max-w-none dark:prose-invert mb-12 article-content prose-img:rounded-xl prose-img:my-6 prose-p:my-4 prose-figure:my-8 prose-figcaption:text-center prose-figcaption:text-sm prose-figcaption:text-muted-foreground prose-figcaption:mt-2 prose-figcaption:italic">
-              <div dangerouslySetInnerHTML={{ __html: article.content }} />
+              <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
             </article>
 
             {/* Tags */}
