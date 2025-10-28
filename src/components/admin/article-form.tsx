@@ -17,6 +17,7 @@ import { Upload, Eye, Save, Send, X, Clock, CheckCircle, Youtube, Sparkles, Clip
 import { formatDistanceToNow } from 'date-fns';
 import slugify from 'slugify';
 import { z } from 'zod';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 interface Article {
   id?: string;
@@ -226,11 +227,15 @@ export function ArticleForm({ article, onSave }: ArticleFormProps) {
       if (article?.id) {
         const sanitizedTags = Array.from(new Set((formData.tags || []).map(t => t.trim()).filter(Boolean)));
         const categoryId = formData.category_id && formData.category_id !== '' ? formData.category_id : (categories[0]?.id || null);
+        
+        // Sanitize content before auto-save
+        const sanitizedContent = sanitizeHtml(formData.content);
+        
         const updatePayload = {
           title: formData.title,
           slug: formData.slug,
           excerpt: formData.excerpt?.trim() ? formData.excerpt : null,
-          content: formData.content,
+          content: sanitizedContent,
           image_url: (formData.image_url && formData.image_url.trim() !== '') ? formData.image_url : null,
           category_id: categoryId,
           tags: sanitizedTags.length ? sanitizedTags : null,
@@ -380,11 +385,14 @@ export function ArticleForm({ article, onSave }: ArticleFormProps) {
 
       const now = new Date().toISOString();
 
+      // Sanitize HTML content to prevent XSS and ensure proper formatting
+      const sanitizedContent = sanitizeHtml(formData.content);
+
       const articleData = {
         title: formData.title,
         slug: safeSlug,
         excerpt: formData.excerpt?.trim() ? formData.excerpt : null,
-        content: formData.content,
+        content: sanitizedContent,
         image_url: (imageUrl && imageUrl.trim() !== '') ? imageUrl : null,
         category_id: categoryId,
         tags: sanitizedTags.length ? sanitizedTags : null,
