@@ -17,15 +17,18 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
+        "react": path.resolve(__dirname, "./node_modules/react"),
+        "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
       },
       dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
     },
     optimizeDeps: {
-      force: true, // Force re-optimization
       include: [
         "react",
         "react-dom",
+        "react-dom/client",
         "react/jsx-runtime",
+        "react/jsx-dev-runtime",
         "@radix-ui/react-dropdown-menu",
         "@radix-ui/react-slot",
         "@radix-ui/react-separator",
@@ -42,8 +45,8 @@ export default defineConfig(({ mode }) => {
         "@radix-ui/react-tabs",
         "@radix-ui/react-toast",
         "@radix-ui/react-tooltip",
+        "next-themes",
       ],
-      exclude: [],
       esbuildOptions: {
         target: "es2020",
       },
