@@ -259,23 +259,46 @@ export function ArticleForm({ article, onSave }: ArticleFormProps) {
   }, [formData, article?.id]);
 
   const handleImageUpload = async (file: File) => {
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}.${fileExt}`;
-    const filePath = fileName;
+    try {
+      // Show optimization message
+      toast({
+        title: "Optimizing image...",
+        description: "Compressing feature image for better performance",
+      });
 
-    const { error: uploadError } = await supabase.storage
-      .from('article-images')
-      .upload(filePath, file);
+      // Optimize the image
+      const { optimizeImage, formatFileSize } = await import('@/lib/image-optimizer');
+      const optimized = await optimizeImage(file, (progress) => {
+        console.log(`Feature image optimization: ${progress}%`);
+      });
 
-    if (uploadError) {
-      throw uploadError;
+      const fileExt = optimized.optimizedFile.type.split('/')[1];
+      const fileName = `${Date.now()}-optimized.${fileExt}`;
+      const filePath = fileName;
+
+      const { error: uploadError } = await supabase.storage
+        .from('article-images')
+        .upload(filePath, optimized.optimizedFile);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage
+        .from('article-images')
+        .getPublicUrl(filePath);
+
+      // Show compression results
+      toast({
+        title: "Feature image optimized!",
+        description: `Reduced by ${optimized.compressionRatio}% (${formatFileSize(optimized.originalSize)} → ${formatFileSize(optimized.optimizedSize)})`,
+      });
+
+      return data.publicUrl;
+    } catch (error) {
+      console.error('Feature image upload error:', error);
+      throw error;
     }
-
-    const { data } = supabase.storage
-      .from('article-images')
-      .getPublicUrl(filePath);
-
-    return data.publicUrl;
   };
 
   const handleSubmit = async (isDraft: boolean = false) => {

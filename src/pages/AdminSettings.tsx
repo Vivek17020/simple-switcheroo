@@ -6,7 +6,8 @@ import { SecurityAuditReport } from '@/components/security/security-audit-report
 import { OneSignalTestNotification } from '@/components/admin/onesignal-test-notification';
 import { OneSignalAnalytics } from '@/components/admin/onesignal-analytics';
 import { OneSignalIntegrationCheck } from '@/components/admin/onesignal-integration-check';
-import { Settings, Shield, Bell, Database } from 'lucide-react';
+import { ImageOptimizationStatus } from '@/components/admin/image-optimization-status';
+import { Settings, Shield, Bell, Database, Image } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { Navigate } from 'react-router-dom';
 
@@ -42,7 +43,7 @@ export default function AdminSettings() {
       <SecurityNotice />
 
       <Tabs defaultValue="security" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="security" className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
             Security
@@ -50,6 +51,10 @@ export default function AdminSettings() {
           <TabsTrigger value="notifications" className="flex items-center gap-2">
             <Bell className="h-4 w-4" />
             Notifications
+          </TabsTrigger>
+          <TabsTrigger value="media" className="flex items-center gap-2">
+            <Image className="h-4 w-4" />
+            Media
           </TabsTrigger>
           <TabsTrigger value="database" className="flex items-center gap-2">
             <Database className="h-4 w-4" />
@@ -66,6 +71,10 @@ export default function AdminSettings() {
           <OneSignalTestNotification />
           <OneSignalIntegrationCheck />
           <VAPIDGenerator />
+        </TabsContent>
+
+        <TabsContent value="media" className="space-y-6">
+          <ImageOptimizationStatus />
         </TabsContent>
 
         <TabsContent value="database" className="space-y-6">

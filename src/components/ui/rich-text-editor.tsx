@@ -143,19 +143,38 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
 
   const uploadImage = useCallback(async (file: File) => {
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
+      // Show optimization progress
+      toast({
+        title: "Optimizing image...",
+        description: "Compressing and preparing your image",
+      });
+
+      // Optimize the image
+      const { optimizeImage, formatFileSize } = await import('@/lib/image-optimizer');
+      const optimized = await optimizeImage(file, (progress) => {
+        console.log(`Optimization progress: ${progress}%`);
+      });
+
+      // Upload optimized version
+      const fileExt = optimized.optimizedFile.type.split('/')[1];
+      const fileName = `${Date.now()}-optimized.${fileExt}`;
       const filePath = `article-images/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('article-images')
-        .upload(filePath, file);
+        .upload(filePath, optimized.optimizedFile);
 
       if (uploadError) throw uploadError;
 
       const { data } = supabase.storage
         .from('article-images')
         .getPublicUrl(filePath);
+
+      // Show success with compression stats
+      toast({
+        title: "Image optimized!",
+        description: `Reduced by ${optimized.compressionRatio}% (${formatFileSize(optimized.originalSize)} → ${formatFileSize(optimized.optimizedSize)})`,
+      });
 
       return data.publicUrl;
     } catch (error) {
