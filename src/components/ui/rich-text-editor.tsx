@@ -192,17 +192,11 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
     if (!editor || !uploadedImageUrl) return;
 
     const alt = imageAlt || 'Article image';
+    const caption = imageCaption.trim() || alt;
     
-    if (imageCaption.trim()) {
-      // Insert with figure and figcaption
-      const figureHtml = `<figure><img src="${uploadedImageUrl}" alt="${alt}" /><figcaption>${imageCaption}</figcaption></figure><p><br /></p>`;
-      editor.chain().focus().insertContent(figureHtml).run();
-    } else {
-      // Insert just the image
-      editor.chain().focus().setImage({ src: uploadedImageUrl, alt }).run();
-      // Add empty paragraph after image
-      editor.chain().focus().insertContent('<p><br /></p>').run();
-    }
+    // Always insert with figure and figcaption (using caption if provided, otherwise alt text)
+    const figureHtml = `<figure><img src="${uploadedImageUrl}" alt="${alt}" /><figcaption>${caption}</figcaption></figure><p><br /></p>`;
+    editor.chain().focus().insertContent(figureHtml).run();
 
     // Reset state
     setShowImageDialog(false);
