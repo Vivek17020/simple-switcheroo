@@ -23,12 +23,9 @@ export default defineConfig(({ mode }) => {
       dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
     },
     optimizeDeps: {
+      force: true,
       include: [
-        "react",
-        "react-dom",
-        "react-dom/client",
         "react/jsx-runtime",
-        "react/jsx-dev-runtime",
         "@radix-ui/react-dropdown-menu",
         "@radix-ui/react-slot",
         "@radix-ui/react-separator",
@@ -47,6 +44,7 @@ export default defineConfig(({ mode }) => {
         "@radix-ui/react-tooltip",
         "next-themes",
       ],
+      exclude: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
       esbuildOptions: {
         target: "es2020",
       },
