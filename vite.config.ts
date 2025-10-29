@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
       dedupe: ["react", "react-dom"],
     },
     optimizeDeps: {
+      force: true,
       include: [
         "react",
         "react-dom",
