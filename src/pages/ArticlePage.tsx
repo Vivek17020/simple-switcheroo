@@ -37,12 +37,32 @@ import {
 export default function ArticlePage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { data: article, isLoading, error } = useArticle(slug!);
+  const { data: article, isLoading, error } = useArticle(slug || "");
   const trackReading = useTrackReading();
   const contentRef = useRef<HTMLDivElement>(null);
   const articleContainerRef = useRef<HTMLDivElement>(null);
   const { currentLanguage } = useTranslation();
   const isMobile = useIsMobile();
+
+  // Early return if no slug
+  if (!slug) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <main className="container mx-auto px-4 py-8">
+          <div className="text-center py-12">
+            <h1 className="text-2xl font-bold mb-4">Invalid Article</h1>
+            <p className="text-muted-foreground mb-8">
+              No article slug provided.
+            </p>
+            <Button asChild>
+              <Link to="/">Return to Homepage</Link>
+            </Button>
+          </div>
+        </main>
+      </div>
+    );
+  }
   
   // Fetch adjacent articles for swipe navigation
   const { data: adjacentArticles } = useAdjacentArticles(
@@ -69,9 +89,14 @@ export default function ArticlePage() {
   
   // Sanitize content for security when displaying
   const displayContent = useMemo(() => {
-    if (!article || !article.content) return '';
-    const content = typeof article.content === 'string' ? article.content : String(article.content);
-    return sanitizeHtml(content);
+    if (!article?.content) return '';
+    try {
+      const content = typeof article.content === 'string' ? article.content : String(article.content);
+      return sanitizeHtml(content);
+    } catch (err) {
+      console.error('Error sanitizing content:', err);
+      return '';
+    }
   }, [article?.content]);
   
   useAutoTranslate(contentRef);
@@ -166,6 +191,10 @@ export default function ArticlePage() {
   // Use database canonical URL if available, fallback to generated
   const canonicalUrl = (article as any).canonical_url || `https://www.thebulletinbriefs.in/article/${article.slug}`;
   
+  // Safely get category data with fallbacks
+  const categoryName = article.categories?.name || "Uncategorized";
+  const categorySlug = article.categories?.slug || "general";
+  
   // Use database keywords if available, fallback to auto-generated
   const dbKeywords = {
     primary_keyword: (article as any).primary_keyword,
@@ -193,8 +222,8 @@ export default function ArticlePage() {
   // Generate breadcrumbs
   const breadcrumbs = useBreadcrumbs(
     article.title, 
-    article.categories?.name, 
-    article.categories?.slug
+    categoryName, 
+    categorySlug
   );
   const authorUsername = article.public_profiles?.username || article.profiles?.username;
   
@@ -295,8 +324,8 @@ export default function ArticlePage() {
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
-                    <Link to={`/category/${article.categories?.slug}`}>
-                      {article.categories?.name}
+                    <Link to={`/category/${categorySlug}`}>
+                      {categoryName}
                     </Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
@@ -313,7 +342,7 @@ export default function ArticlePage() {
             <header className="mb-8">
               <div className="flex items-center gap-2 mb-4">
                 <Badge variant="secondary">
-                  {article.categories?.name}
+                  {categoryName}
                 </Badge>
                 <span className="text-sm text-muted-foreground">
                   {format(publishedDate, "MMMM d, yyyy")}
