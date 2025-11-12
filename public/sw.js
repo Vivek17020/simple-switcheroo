@@ -98,7 +98,23 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-first strategy for static assets (JS, CSS, images)
+  // Prefer network-first for JS chunks to avoid stale code after deploys
+  if (request.destination === 'script' || request.url.includes('/assets/')) {
+    event.respondWith(
+      fetch(request, { cache: 'no-store' })
+        .then(response => {
+          if (response && response.status === 200) {
+            const responseToCache = response.clone();
+            caches.open(DYNAMIC_CACHE).then(cache => cache.put(request, responseToCache));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Cache-first strategy for other static assets (CSS, images, fonts)
   event.respondWith(
     caches.match(request)
       .then(cachedResponse => {

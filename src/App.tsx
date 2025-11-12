@@ -18,15 +18,20 @@ const lazyWithRetry = (importer: () => Promise<any>) => lazy(async () => {
     return await importer();
   } catch (err: any) {
     const msg = String(err?.message || err);
-    const isChunkError = msg.includes('Failed to fetch dynamically imported module') || msg.includes('Importing a module script failed') || msg.includes('ChunkLoadError');
+    const isChunkError = msg.includes('Failed to fetch dynamically imported module') || msg.includes('Importing a module script failed') || msg.includes('ChunkLoadError') || msg.includes('The script has an unsupported MIME type');
     if (isChunkError) {
       try {
         if ('serviceWorker' in navigator) {
           const regs = await navigator.serviceWorker.getRegistrations();
           await Promise.all(regs.map(r => r.unregister()));
+          // Ask any active controller to clear caches and skip waiting
+          if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_CACHE' });
+            navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+          }
         }
       } catch {}
-      await new Promise(r => setTimeout(r, 300));
+      await new Promise(r => setTimeout(r, 500));
       return importer();
     }
     throw err;
