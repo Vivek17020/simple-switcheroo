@@ -154,9 +154,10 @@ export const useArticle = (slug: string) => {
         `)
         .eq("slug", slug)
         .eq("published", true)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+      if (!data) throw new Error("Article not found");
 
       // Fetch author public profile
       let authorProfile: { username: string; full_name: string | null } | undefined = undefined;
@@ -171,8 +172,8 @@ export const useArticle = (slug: string) => {
         }
       }
 
-      // Increment view count (best-effort)
-      await supabase
+      // Increment view count (best-effort, don't block on this)
+      void supabase
         .from("articles")
         .update({ views_count: (data.views_count || 0) + 1 })
         .eq("id", data.id);
@@ -185,8 +186,10 @@ export const useArticle = (slug: string) => {
 
       return article;
     },
-    staleTime: 1000 * 60 * 5, // Cache article for 5 minutes
-    gcTime: 1000 * 60 * 10, // Keep in cache for 10 minutes
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   });
 };
 
