@@ -36,12 +36,18 @@ serve(async (req) => {
     }
 
     // Query database for related articles
-    const { data: articles, error } = await supabase
+    let query = supabase
       .from('articles')
       .select('id, slug, title, excerpt, tags')
       .eq('published', true)
-      .neq('id', currentArticleId || '')
-      .limit(20)
+      .limit(20);
+    
+    // Only exclude current article if ID is provided
+    if (currentArticleId) {
+      query = query.neq('id', currentArticleId);
+    }
+    
+    const { data: articles, error } = await query
 
     if (error) {
       console.error('Database query error:', error)
