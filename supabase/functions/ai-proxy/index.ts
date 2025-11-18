@@ -1227,7 +1227,14 @@ Base suggestions on the article topic. If no authoritative sources are relevant,
           const userPrompt = `Article Title: ${title}\n\nArticle Content:\n${content.substring(0, 2000)}`;
           
           const aiResponse = await callLovableAI(systemPrompt + '\n\n' + userPrompt);
-          let parsed = JSON.parse(aiResponse.trim());
+          
+          // Strip markdown code blocks if present
+          let cleanedResponse = aiResponse.trim();
+          cleanedResponse = cleanedResponse.replace(/^```json\s*/i, '');
+          cleanedResponse = cleanedResponse.replace(/^```\s*/i, '');
+          cleanedResponse = cleanedResponse.replace(/\s*```$/i, '');
+          
+          let parsed = JSON.parse(cleanedResponse);
           
           // Ensure suggestions is always an array
           if (!parsed.suggestions || !Array.isArray(parsed.suggestions)) {
