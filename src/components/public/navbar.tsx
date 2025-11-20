@@ -6,7 +6,6 @@ import { Menu, X } from "lucide-react";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { UserMenu } from "@/components/public/user-menu";
-import { NotificationBell } from "@/components/public/notification-bell";
 
 export function Navbar() {
   const { data: categories } = useCategories();
@@ -137,7 +136,6 @@ export function Navbar() {
 
         <div className="flex flex-1 items-center justify-end">
           <nav className="flex items-center space-x-2">
-            <NotificationBell />
             <ThemeToggle />
             <UserMenu />
           </nav>

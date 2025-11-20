@@ -1311,24 +1311,65 @@ export function ArticleForm({ article, onSave }: ArticleFormProps) {
         let updatedContent = formData.content;
         let linksAdded = 0;
         
-        data.suggestions.slice(0, 5).forEach((suggestion: any) => {
+        // Take top 5 suggestions
+        const topSuggestions = data.suggestions.slice(0, 5);
+        
+        topSuggestions.forEach((suggestion: any) => {
           const anchor = suggestion.suggestedAnchors[0];
-          const link = `<a href="/article/${suggestion.slug}">${anchor}</a>`;
+          const link = `<a href="/article/${suggestion.slug}" class="text-primary hover:underline">${anchor}</a>`;
           
-          if (!updatedContent.includes(link)) {
+          // Check if link already exists
+          if (updatedContent.includes(suggestion.slug)) {
+            return;
+          }
+          
+          // Find the best place to inject the link - look for relevant keywords in paragraphs
+          const keywords = suggestion.title.toLowerCase().split(' ').filter((w: string) => w.length > 4);
+          const contentLower = updatedContent.toLowerCase();
+          
+          // Try to find a paragraph that contains related keywords
+          const paragraphs = updatedContent.match(/<p>[\s\S]*?<\/p>/gi) || [];
+          let injected = false;
+          
+          for (let i = 0; i < paragraphs.length && !injected; i++) {
+            const para = paragraphs[i];
+            const paraLower = para.toLowerCase();
+            
+            // Check if paragraph contains any of the keywords
+            const hasKeyword = keywords.some((kw: string) => paraLower.includes(kw));
+            
+            if (hasKeyword && para.length > 150 && !para.includes('href=')) {
+              // Insert link at the end of this paragraph, before closing tag
+              const newPara = para.replace('</p>', ` ${link}.</p>`);
+              updatedContent = updatedContent.replace(para, newPara);
+              linksAdded++;
+              injected = true;
+            }
+          }
+          
+          // If no suitable paragraph found, add as a new paragraph after first paragraph
+          if (!injected && paragraphs.length > 0) {
+            const firstPara = paragraphs[0];
             updatedContent = updatedContent.replace(
-              /(<p>[^<]{100,}?<\/p>)/i,
-              `$1\n<p>${link}</p>`
+              firstPara,
+              `${firstPara}\n<p>Related: ${link}</p>`
             );
             linksAdded++;
           }
         });
         
-        updateFormData({ content: updatedContent });
-        toast({
-          title: "Internal Links Added",
-          description: `${linksAdded} contextual internal links have been added to your content.`,
-        });
+        if (linksAdded > 0) {
+          updateFormData({ content: updatedContent });
+          toast({
+            title: "Internal Links Added ✨",
+            description: `${linksAdded} contextual internal links have been intelligently placed in your content.`,
+          });
+        } else {
+          toast({
+            title: "No Suitable Placement",
+            description: "Could not find suitable places to inject the suggested links.",
+          });
+        }
       } else {
         toast({
           title: "No Links Found",
