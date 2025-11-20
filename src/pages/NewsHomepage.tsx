@@ -5,7 +5,6 @@ import { CategoryFilter } from "@/components/public/category-filter";
 import { ArticleGrid } from "@/components/public/article-grid";
 import { PersonalizedFeed } from "@/components/public/personalized-feed";
 const Footer = lazy(() => import('@/components/public/footer').then(module => ({ default: module.Footer })));
-import { PushNotificationButton } from '@/components/public/push-notification-button';
 import { SearchDialog } from '@/components/public/search-dialog';
 import { FloatingTranslationButton } from '@/components/public/floating-translation-button';
 import { HomepageVideos } from '@/components/public/homepage-videos';
@@ -114,7 +113,6 @@ export default function NewsHomepage() {
                   >
                     <Search className="h-4 w-4" />
                   </Button>
-                  <PushNotificationButton />
                   <Button
                     variant="default"
                     size="icon"
@@ -219,22 +217,7 @@ export default function NewsHomepage() {
           <Separator className="my-12" />
 
           {/* Quick Actions */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Push Notifications */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  📱 Push Notifications
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Get instant news updates delivered to your device
-                </p>
-                <PushNotificationButton />
-              </CardContent>
-            </Card>
-
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Additional features can be added here */}
             <Card>
               <CardHeader>

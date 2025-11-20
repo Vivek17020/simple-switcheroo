@@ -481,6 +481,21 @@ export function ArticleForm({ article, onSave }: ArticleFormProps) {
         }).catch(err => {
           console.error('Search engine notification failed (non-critical):', err);
         });
+
+        // Send OneSignal push notification to subscribers
+        supabase.functions.invoke('send-onesignal-notification', {
+          body: { articleId: savedArticleId }
+        }).then(({ data, error }) => {
+          if (!error && data) {
+            console.log(`Push notification sent to ${data.recipients || 0} subscribers`);
+            toast({
+              title: "Notification sent! 🔔",
+              description: `Push notification delivered to ${data.recipients || 0} subscribers.`,
+            });
+          }
+        }).catch(err => {
+          console.error('Push notification failed (non-critical):', err);
+        });
       }
 
       // Clear draft from localStorage after successful save
