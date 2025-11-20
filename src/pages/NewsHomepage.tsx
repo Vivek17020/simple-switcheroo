@@ -14,6 +14,7 @@ import { JustInSection } from '@/components/public/just-in-section';
 import { CategorySections } from '@/components/public/category-sections';
 import { WebStoriesSection } from '@/components/public/web-stories-section';
 import { AdSlot } from '@/components/ads/ad-slot';
+import { NotificationBell } from '@/components/public/notification-bell';
 import { NativeAdContainer } from '@/components/ads/native-ad-container';
 import { PremiumArticleList } from '@/components/monetization/premium-article-list';
 import { SEOHead, generateOrganizationStructuredData, generateWebSiteStructuredData } from '@/utils/seo';
@@ -113,6 +114,7 @@ export default function NewsHomepage() {
                   >
                     <Search className="h-4 w-4" />
                   </Button>
+                  <NotificationBell />
                   <Button
                     variant="default"
                     size="icon"
