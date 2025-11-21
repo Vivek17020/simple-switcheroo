@@ -100,7 +100,8 @@ serve(async (req) => {
 function generateAMPStory(story: WebStory, config: any): string {
   const baseUrl = 'https://www.thebulletinbriefs.in';
   const storyUrl = `${baseUrl}/webstories/${story.category.toLowerCase()}/${story.slug}`;
-  const canonicalUrl = story.canonical_url || storyUrl;
+  // Canonical must point to non-AMP version (the React preview page)
+  const canonicalUrl = story.canonical_url || `${baseUrl}/web-story-preview/${story.slug}`;
   const posterImage = story.featured_image || story.slides[0]?.image || `${baseUrl}/logo.png`;
   const publishDate = new Date(story.published_at).toISOString();
   const modifiedDate = new Date(story.updated_at).toISOString();
@@ -157,14 +158,15 @@ function generateAMPStory(story: WebStory, config: any): string {
   };
 
   return `<!doctype html>
-<html amp lang="en">
+<html ⚡ lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
   
-  <!-- AMP Scripts -->
+  <!-- AMP Scripts - v0.js must be first -->
   <script async src="https://cdn.ampproject.org/v0.js"></script>
-  <script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>
+  <script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>${config.google_analytics_id ? `
+  <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>` : ''}
   
   <!-- SEO Meta Tags -->
   <title>${escapeHtml(story.title)} | ${config.publisher_name}</title>
@@ -180,11 +182,11 @@ function generateAMPStory(story: WebStory, config: any): string {
   <meta property="og:title" content="${escapeHtml(story.title)}">
   <meta property="og:description" content="${escapeHtml(story.description || story.title)}">
   <meta property="og:image" content="${escapeHtml(posterImage)}">
-  <meta property="og:url" content="${escapeHtml(storyUrl)}">
+  <meta property="og:url" content="${escapeHtml(canonicalUrl)}">
   <meta property="og:site_name" content="${config.publisher_name}">
   <meta property="article:published_time" content="${publishDate}">
   <meta property="article:modified_time" content="${modifiedDate}">
-  <meta property="article:section" content="${story.category}">
+  <meta property="article:section" content="${escapeHtml(story.category)}">
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
@@ -243,14 +245,13 @@ function generateAMPStory(story: WebStory, config: any): string {
     poster-portrait-src="${escapeHtml(posterImage)}"
   >
     ${config.google_analytics_id ? `
-    <!-- Google Analytics -->
     <amp-analytics type="gtag" data-credentials="include">
       <script type="application/json">
       {
         "vars": {
-          "gtag_id": "${config.google_analytics_id}",
+          "gtag_id": "${escapeHtml(config.google_analytics_id)}",
           "config": {
-            "${config.google_analytics_id}": {
+            "${escapeHtml(config.google_analytics_id)}": {
               "groups": "default"
             }
           }
@@ -322,11 +323,12 @@ function generateAMPStory(story: WebStory, config: any): string {
 
 function generate404Page(): string {
   return `<!doctype html>
-<html amp lang="en">
+<html ⚡ lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
   <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <link rel="canonical" href="https://www.thebulletinbriefs.in/web-stories">
   <title>Story Not Found | TheBulletinBriefs</title>
   <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
   <style amp-custom>
