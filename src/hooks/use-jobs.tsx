@@ -62,7 +62,7 @@ export function useRecommendedJobs(userId?: string) {
 }
 
 /**
- * Hook for managing saved jobs (localStorage for anonymous users)
+ * Hook for managing saved jobs (localStorage for anonymous users, DB for authenticated)
  */
 export function useSavedJobs() {
   const [savedJobIds, setSavedJobIds] = useState<string[]>(() => {
@@ -70,7 +70,30 @@ export function useSavedJobs() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  const saveJob = useCallback((jobId: string) => {
+  // Sync saved jobs from database for authenticated users
+  useEffect(() => {
+    const syncSavedJobs = async () => {
+      try {
+        const jobs = await JobsAPI.getSavedJobs();
+        const ids = jobs.map((job) => job.id);
+        setSavedJobIds(ids);
+        localStorage.setItem('savedJobs', JSON.stringify(ids));
+      } catch (error) {
+        // User is not authenticated, use localStorage
+        console.log('Using local storage for saved jobs');
+      }
+    };
+    syncSavedJobs();
+  }, []);
+
+  const saveJob = useCallback(async (jobId: string) => {
+    try {
+      await JobsAPI.saveJob(jobId);
+    } catch (error) {
+      // User is not authenticated, use localStorage
+      console.log('Saving to localStorage');
+    }
+    
     setSavedJobIds((prev) => {
       const updated = [...prev, jobId];
       localStorage.setItem('savedJobs', JSON.stringify(updated));
@@ -78,7 +101,14 @@ export function useSavedJobs() {
     });
   }, []);
 
-  const unsaveJob = useCallback((jobId: string) => {
+  const unsaveJob = useCallback(async (jobId: string) => {
+    try {
+      await JobsAPI.unsaveJob(jobId);
+    } catch (error) {
+      // User is not authenticated, use localStorage
+      console.log('Removing from localStorage');
+    }
+    
     setSavedJobIds((prev) => {
       const updated = prev.filter((id) => id !== jobId);
       localStorage.setItem('savedJobs', JSON.stringify(updated));
