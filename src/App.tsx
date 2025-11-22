@@ -90,6 +90,7 @@ const PdfWatermark = lazy(() => import("@/pages/tools/PdfWatermark"));
 const ToolsAuditReport = lazy(() => import("@/pages/ToolsAuditReport"));
 const AdminIndexingDashboard = lazy(() => import("@/pages/AdminIndexingDashboard"));
 const AdminSEOAudit = lazy(() => import("@/pages/AdminSEOAudit"));
+const PrivateJobs = lazy(() => import("@/pages/PrivateJobs"));
 
 const App = () => {
   return (
@@ -158,6 +159,7 @@ const App = () => {
           <Route path="/government-exams/:slug" element={<GovernmentExamPapers />} />
           <Route path="/jobs/previous-year-papers" element={<PreviousYearPapers />} />
           <Route path="/jobs/previous-year-papers/:slug" element={<ExamPaperDetail />} />
+          <Route path="/private-jobs" element={<PrivateJobs />} />
           <Route path="/admit-cards" element={<AdmitCards />} />
           <Route path="/jobs/results" element={<ComingSoon title="Results" />} />
           <Route path="/jobs/syllabus" element={<ComingSoon title="Syllabus" />} />

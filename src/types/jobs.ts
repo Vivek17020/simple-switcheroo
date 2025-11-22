@@ -39,6 +39,7 @@ export interface JobFilters {
 }
 
 export interface CreateJobPayload {
+  slug: string;
   title: string;
   company: string;
   logo: string;
