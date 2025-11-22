@@ -991,6 +991,99 @@ export type Database = {
         }
         Relationships: []
       }
+      private_jobs: {
+        Row: {
+          applies_count: number | null
+          apply_url: string
+          author_id: string | null
+          company: string
+          created_at: string | null
+          description: string
+          experience: string
+          id: string
+          is_new: boolean | null
+          is_published: boolean | null
+          job_type: string
+          location: string
+          logo: string | null
+          posted_at: string | null
+          recommended_score: number | null
+          salary: string
+          short_description: string
+          slug: string
+          source: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+          views_count: number | null
+        }
+        Insert: {
+          applies_count?: number | null
+          apply_url: string
+          author_id?: string | null
+          company: string
+          created_at?: string | null
+          description: string
+          experience: string
+          id?: string
+          is_new?: boolean | null
+          is_published?: boolean | null
+          job_type: string
+          location: string
+          logo?: string | null
+          posted_at?: string | null
+          recommended_score?: number | null
+          salary: string
+          short_description: string
+          slug: string
+          source?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+          views_count?: number | null
+        }
+        Update: {
+          applies_count?: number | null
+          apply_url?: string
+          author_id?: string | null
+          company?: string
+          created_at?: string | null
+          description?: string
+          experience?: string
+          id?: string
+          is_new?: boolean | null
+          is_published?: boolean | null
+          job_type?: string
+          location?: string
+          logo?: string | null
+          posted_at?: string | null
+          recommended_score?: number | null
+          salary?: string
+          short_description?: string
+          slug?: string
+          source?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+          views_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "private_jobs_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "private_jobs_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           author_bio: string | null
@@ -1095,6 +1188,35 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      saved_jobs: {
+        Row: {
+          id: string
+          job_id: string | null
+          saved_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          id?: string
+          job_id?: string | null
+          saved_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          id?: string
+          job_id?: string | null
+          saved_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_jobs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "private_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       security_audit_log: {
         Row: {
@@ -1834,6 +1956,8 @@ export type Database = {
           user_id: string
         }[]
       }
+      increment_job_applies: { Args: { job_uuid: string }; Returns: undefined }
+      increment_job_views: { Args: { job_uuid: string }; Returns: undefined }
       is_admin: { Args: never; Returns: boolean }
       log_security_event: {
         Args: { action_type: string; resource_name?: string }
