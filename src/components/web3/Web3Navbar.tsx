@@ -20,15 +20,15 @@ export function Web3Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
+    <nav className="sticky top-0 z-50 bg-[hsl(var(--web3-bg-dark-elevated))]/95 backdrop-blur-lg border-b border-[hsl(var(--web3-border-dark))]">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/web3forindia" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#6A5BFF] to-[#4AC4FF] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[hsl(var(--web3-primary))] to-[hsl(var(--web3-secondary))] flex items-center justify-center">
               <span className="text-white font-bold text-xl">W3</span>
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-[#6A5BFF] to-[#4AC4FF] bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-gradient-to-r from-[hsl(var(--web3-primary))] to-[hsl(var(--web3-secondary))] bg-clip-text text-transparent">
               Web3 for India
             </span>
           </Link>
@@ -39,7 +39,7 @@ export function Web3Navbar() {
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-sm font-medium text-gray-700 hover:text-[#6A5BFF] transition-colors"
+                className="text-sm font-medium text-[hsl(var(--web3-text-dark-muted))] hover:text-[hsl(var(--web3-primary))] transition-colors"
               >
                 {link.name}
               </Link>
@@ -48,13 +48,13 @@ export function Web3Navbar() {
               variant="ghost"
               size="icon"
               onClick={() => setIsSearchOpen(true)}
-              className="text-gray-700 hover:text-[#6A5BFF] transition-colors"
+              className="text-[hsl(var(--web3-text-dark-muted))] hover:text-[hsl(var(--web3-primary))] transition-colors"
               title="Search (Ctrl+K)"
             >
               <Search className="w-5 h-5" />
             </Button>
             <Link to="/web3forindia">
-              <Button className="bg-gradient-to-r from-[#6A5BFF] to-[#4AC4FF] text-white hover:opacity-90 transition-opacity">
+              <Button className="bg-gradient-to-r from-[hsl(var(--web3-primary))] to-[hsl(var(--web3-secondary))] text-white hover:opacity-90 transition-opacity">
                 Start Learning
               </Button>
             </Link>
@@ -66,23 +66,23 @@ export function Web3Navbar() {
             className="md:hidden p-2"
           >
             {isMenuOpen ? (
-              <X className="w-6 h-6 text-gray-700" />
+              <X className="w-6 h-6 text-[hsl(var(--web3-text-dark))]" />
             ) : (
-              <Menu className="w-6 h-6 text-gray-700" />
+              <Menu className="w-6 h-6 text-[hsl(var(--web3-text-dark))]" />
             )}
           </button>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 space-y-4">
+          <div className="md:hidden py-4 space-y-4 border-t border-[hsl(var(--web3-border-dark))]">
             <Button
               variant="ghost"
               onClick={() => {
                 setIsSearchOpen(true);
                 setIsMenuOpen(false);
               }}
-              className="w-full justify-start gap-2 text-gray-700 hover:text-[#6A5BFF]"
+              className="w-full justify-start gap-2 text-[hsl(var(--web3-text-dark-muted))] hover:text-[hsl(var(--web3-primary))]"
             >
               <Search className="w-5 h-5" />
               Search
@@ -91,14 +91,14 @@ export function Web3Navbar() {
               <Link
                 key={link.name}
                 to={link.href}
-                className="block text-sm font-medium text-gray-700 hover:text-[#6A5BFF] transition-colors"
+                className="block text-sm font-medium text-[hsl(var(--web3-text-dark-muted))] hover:text-[hsl(var(--web3-primary))] transition-colors px-4 py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link.name}
               </Link>
             ))}
-            <Link to="/web3forindia" onClick={() => setIsMenuOpen(false)}>
-              <Button className="w-full bg-gradient-to-r from-[#6A5BFF] to-[#4AC4FF] text-white hover:opacity-90 transition-opacity">
+            <Link to="/web3forindia" onClick={() => setIsMenuOpen(false)} className="px-4">
+              <Button className="w-full bg-gradient-to-r from-[hsl(var(--web3-primary))] to-[hsl(var(--web3-secondary))] text-white hover:opacity-90 transition-opacity">
                 Start Learning
               </Button>
             </Link>
