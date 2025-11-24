@@ -53,12 +53,12 @@ export default function Web3ArticlePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-[hsl(var(--web3-bg-dark))]">
         <div className="container mx-auto px-4 py-16">
-          <Skeleton className="h-8 w-32 mb-8" />
-          <Skeleton className="h-16 w-full max-w-4xl mb-4" />
-          <Skeleton className="h-96 w-full max-w-4xl mb-8" />
-          <Skeleton className="h-64 w-full max-w-4xl" />
+          <Skeleton className="h-8 w-32 mb-8 bg-[hsl(var(--web3-border-dark))]" />
+          <Skeleton className="h-16 w-full max-w-4xl mb-4 bg-[hsl(var(--web3-border-dark))]" />
+          <Skeleton className="h-96 w-full max-w-4xl mb-8 bg-[hsl(var(--web3-border-dark))]" />
+          <Skeleton className="h-64 w-full max-w-4xl bg-[hsl(var(--web3-border-dark))]" />
         </div>
       </div>
     );
@@ -66,10 +66,10 @@ export default function Web3ArticlePage() {
 
   if (!article) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-[hsl(var(--web3-bg-dark))] flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Article Not Found</h1>
-          <Link to="/web3forindia" className="text-[#6A5BFF] hover:text-[#4AC4FF]">
+          <h1 className="text-4xl font-bold text-[hsl(var(--web3-text-dark))] mb-4">Article Not Found</h1>
+          <Link to="/web3forindia" className="text-[hsl(var(--web3-primary))] hover:text-[hsl(var(--web3-secondary))]">
             Return to Home
           </Link>
         </div>
@@ -127,9 +127,9 @@ export default function Web3ArticlePage() {
         }}
       />
 
-      <article className="min-h-screen bg-white">
+      <article className="min-h-screen bg-[hsl(var(--web3-bg-dark))]">
         {/* Header */}
-        <div className="border-b border-gray-200">
+        <div className="border-b border-[hsl(var(--web3-border-dark))]">
           <div className="container mx-auto px-4 py-8">
             {/* Breadcrumb */}
             <Web3Breadcrumb
@@ -145,19 +145,19 @@ export default function Web3ArticlePage() {
             {/* Category Badge */}
             {article.categories && (
               <Link to={`/web3forindia/${article.categories.slug}`}>
-                <Badge className="mb-4 bg-gradient-to-r from-[#6A5BFF] to-[#4AC4FF] text-white border-0">
+                <Badge className="mb-4 bg-gradient-to-r from-[hsl(var(--web3-primary))] to-[hsl(var(--web3-secondary))] text-white border-0">
                   {article.categories.name}
                 </Badge>
               </Link>
             )}
 
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 max-w-4xl">
+            <h1 className="text-4xl md:text-5xl font-bold text-[hsl(var(--web3-text-dark))] mb-6 max-w-4xl">
               {article.title}
             </h1>
 
             {/* Meta Info */}
-            <div className="flex flex-wrap gap-6 text-sm text-gray-600 mb-6">
+            <div className="flex flex-wrap gap-6 text-sm text-[hsl(var(--web3-text-dark-muted))] mb-6">
               {article.published_at && (
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
@@ -196,17 +196,17 @@ export default function Web3ArticlePage() {
         {/* Content */}
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div 
-            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-[#6A5BFF] hover:prose-a:text-[#4AC4FF] prose-code:text-[#6A5BFF] prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded"
+            className="article-content prose prose-lg max-w-none"
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
 
           {/* Tags */}
           {article.tags && article.tags.length > 0 && (
-            <div className="mt-12 pt-8 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Tags</h3>
+            <div className="mt-12 pt-8 border-t border-[hsl(var(--web3-border-dark))]">
+              <h3 className="text-lg font-semibold text-[hsl(var(--web3-text-dark))] mb-4">Tags</h3>
               <div className="flex flex-wrap gap-2">
                 {article.tags.map((tag) => (
-                  <Badge key={tag} variant="outline" className="text-[#6A5BFF] border-[#6A5BFF]">
+                  <Badge key={tag} variant="outline" className="text-[hsl(var(--web3-primary))] border-[hsl(var(--web3-primary))]">
                     {tag}
                   </Badge>
                 ))}
@@ -217,9 +217,9 @@ export default function Web3ArticlePage() {
 
         {/* Related Articles */}
         {relatedArticles && relatedArticles.length > 0 && (
-          <div className="bg-gray-50 py-16 mt-16">
+          <div className="bg-[hsl(var(--web3-bg-dark-elevated))] py-16 mt-16 border-t border-[hsl(var(--web3-border-dark))]">
             <div className="container mx-auto px-4">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Related Tutorials</h2>
+              <h2 className="text-3xl font-bold text-[hsl(var(--web3-text-dark))] mb-8">Related Tutorials</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedArticles.map((related) => (
                   <Link 
@@ -227,7 +227,7 @@ export default function Web3ArticlePage() {
                     to={`/web3forindia/article/${related.slug}`}
                     className="group"
                   >
-                    <div className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-[#6A5BFF] transition-all">
+                    <div className="bg-[hsl(var(--web3-bg-dark))] rounded-2xl overflow-hidden border border-[hsl(var(--web3-border-dark))] hover:border-[hsl(var(--web3-primary))] transition-all">
                       {related.image_url && (
                         <img 
                           src={related.image_url} 
@@ -236,11 +236,11 @@ export default function Web3ArticlePage() {
                         />
                       )}
                       <div className="p-6">
-                        <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-[#6A5BFF] transition-colors">
+                        <h3 className="font-bold text-[hsl(var(--web3-text-dark))] mb-2 line-clamp-2 group-hover:text-[hsl(var(--web3-primary))] transition-colors">
                           {related.title}
                         </h3>
                         {related.excerpt && (
-                          <p className="text-sm text-gray-600 line-clamp-2">{related.excerpt}</p>
+                          <p className="text-sm text-[hsl(var(--web3-text-dark-muted))] line-clamp-2">{related.excerpt}</p>
                         )}
                       </div>
                     </div>

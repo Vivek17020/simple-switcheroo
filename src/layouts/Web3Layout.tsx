@@ -4,7 +4,7 @@ import { Web3Footer } from "@/components/web3/Web3Footer";
 
 export default function Web3Layout() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen web3-dark bg-[hsl(var(--web3-bg-dark))]">
       <Web3Navbar />
       <main>
         <Outlet />
