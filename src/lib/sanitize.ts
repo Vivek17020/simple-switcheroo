@@ -25,7 +25,8 @@ const SANITIZE_CONFIG = {
     'src', 'alt', 'width', 'height', 'loading', 'decoding',
     'class', 'id', 'style', 'data-*',
     'rowspan', 'colspan',
-    'start', 'reversed', 'type', 'datetime'
+    'start', 'reversed', 'type', 'datetime',
+    'language' // Allow language attribute for code blocks
   ],
   // Enhanced URI regex to support relative URLs (internal links)
   ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp|data):|\/|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
