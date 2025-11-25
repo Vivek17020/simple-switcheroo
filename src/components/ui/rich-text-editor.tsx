@@ -17,6 +17,8 @@ import TaskList from '@tiptap/extension-task-list';
 import TaskItem from '@tiptap/extension-task-item';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import Youtube from '@tiptap/extension-youtube';
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import { common, createLowlight } from 'lowlight';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ColorPicker } from '@/components/ui/color-picker';
@@ -71,6 +73,10 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
   const [imageAlt, setImageAlt] = useState('');
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [isFormattingNews, setIsFormattingNews] = useState(false);
+  const [showCodeBlockDialog, setShowCodeBlockDialog] = useState(false);
+  const [codeLanguage, setCodeLanguage] = useState('javascript');
+
+  const lowlight = createLowlight(common);
 
   const editor = useEditor({
     extensions: [
@@ -106,6 +112,13 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
           HTMLAttributes: {
             class: null,
           },
+        },
+        codeBlock: false, // Disable default code block to use CodeBlockLowlight
+      }),
+      CodeBlockLowlight.configure({
+        lowlight,
+        HTMLAttributes: {
+          class: 'code-block-editor',
         },
       }),
       Underline.configure({
@@ -345,6 +358,21 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
   const insertTable = useCallback(() => {
     editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
   }, [editor]);
+
+  const insertCodeBlock = useCallback(() => {
+    setShowCodeBlockDialog(true);
+  }, []);
+
+  const handleInsertCodeBlock = useCallback(() => {
+    if (!editor) return;
+    editor.chain().focus().toggleCodeBlock().run();
+    const currentPos = editor.state.selection.$anchor.pos;
+    // Set language attribute
+    setTimeout(() => {
+      editor.commands.updateAttributes('codeBlock', { language: codeLanguage });
+    }, 50);
+    setShowCodeBlockDialog(false);
+  }, [editor, codeLanguage]);
 
   const toggleMarkdownMode = useCallback(() => {
     if (!editor) return;
@@ -784,8 +812,9 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+              onClick={insertCodeBlock}
               className={editor.isActive('codeBlock') ? 'bg-accent' : ''}
+              title="Insert Code Block"
             >
               <Code className="h-4 w-4" />
             </Button>
@@ -903,6 +932,57 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
             </Button>
             <Button onClick={handleInsertImage}>
               Insert Image
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Code Block Dialog */}
+      <Dialog open={showCodeBlockDialog} onOpenChange={setShowCodeBlockDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Insert Code Block</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="code-language">Programming Language</Label>
+              <select
+                id="code-language"
+                value={codeLanguage}
+                onChange={(e) => setCodeLanguage(e.target.value)}
+                className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                <option value="javascript">JavaScript</option>
+                <option value="typescript">TypeScript</option>
+                <option value="python">Python</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="c">C</option>
+                <option value="csharp">C#</option>
+                <option value="php">PHP</option>
+                <option value="ruby">Ruby</option>
+                <option value="go">Go</option>
+                <option value="rust">Rust</option>
+                <option value="swift">Swift</option>
+                <option value="kotlin">Kotlin</option>
+                <option value="solidity">Solidity</option>
+                <option value="sql">SQL</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="json">JSON</option>
+                <option value="yaml">YAML</option>
+                <option value="markdown">Markdown</option>
+                <option value="bash">Bash</option>
+                <option value="shell">Shell</option>
+              </select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowCodeBlockDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleInsertCodeBlock}>
+              Insert Code Block
             </Button>
           </DialogFooter>
         </DialogContent>

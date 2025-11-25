@@ -548,4 +548,70 @@ All colors MUST be HSL. Rich blues and purples with sophisticated gradients.
       linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
     background-size: 40px 40px;
   }
+
+  /* Code Block Syntax Highlighting Styles */
+  .code-block-editor {
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    position: relative;
+    margin: 1.5rem 0;
+  }
+
+  .code-block-editor pre {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  .code-block-editor code {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: inherit;
+    display: block;
+    white-space: pre;
+  }
+
+  /* Syntax highlighting tokens */
+  .code-block-editor .hljs-keyword { color: hsl(var(--primary)); font-weight: 600; }
+  .code-block-editor .hljs-string { color: #22c55e; }
+  .code-block-editor .hljs-number { color: #f59e0b; }
+  .code-block-editor .hljs-comment { color: hsl(var(--muted-foreground)); font-style: italic; }
+  .code-block-editor .hljs-function { color: #3b82f6; }
+  .code-block-editor .hljs-class { color: #a855f7; }
+  .code-block-editor .hljs-title { color: #06b6d4; font-weight: 600; }
+  .code-block-editor .hljs-variable { color: #ef4444; }
+  .code-block-editor .hljs-built_in { color: #8b5cf6; }
+  .code-block-editor .hljs-operator { color: hsl(var(--foreground)); }
+  .code-block-editor .hljs-attr { color: #14b8a6; }
+  .code-block-editor .hljs-tag { color: #ec4899; }
+
+  /* Article content code block styling */
+  .article-content pre {
+    background: hsl(var(--muted));
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    position: relative;
+    margin: 1.5rem 0;
+  }
+
+  .article-content pre code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: hsl(var(--foreground));
+  }
+
+  .article-content code:not(pre code) {
+    background: hsl(var(--muted));
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 0.875em;
+    color: hsl(var(--primary));
+  }
 }
