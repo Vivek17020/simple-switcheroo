@@ -56,6 +56,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, Newspaper, Smartphone, Sparkles } from 'lucide-react';
+import Editor from '@monaco-editor/react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface RichTextEditorProps {
   content: string;
@@ -75,6 +77,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
   const [isFormattingNews, setIsFormattingNews] = useState(false);
   const [showCodeBlockDialog, setShowCodeBlockDialog] = useState(false);
   const [codeLanguage, setCodeLanguage] = useState('javascript');
+  const [codeContent, setCodeContent] = useState('');
 
   const lowlight = createLowlight(common);
 
@@ -364,15 +367,30 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
   }, []);
 
   const handleInsertCodeBlock = useCallback(() => {
-    if (!editor) return;
-    editor.chain().focus().toggleCodeBlock().run();
-    const currentPos = editor.state.selection.$anchor.pos;
-    // Set language attribute
-    setTimeout(() => {
-      editor.commands.updateAttributes('codeBlock', { language: codeLanguage });
-    }, 50);
+    if (!editor || !codeContent.trim()) {
+      toast({
+        title: "No code",
+        description: "Please write some code before inserting",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Insert code block with the content
+    editor.chain().focus().insertContent({
+      type: 'codeBlock',
+      attrs: { language: codeLanguage },
+      content: [{
+        type: 'text',
+        text: codeContent
+      }]
+    }).run();
+    
+    // Reset and close
     setShowCodeBlockDialog(false);
-  }, [editor, codeLanguage]);
+    setCodeContent('');
+    setCodeLanguage('javascript');
+  }, [editor, codeLanguage, codeContent]);
 
   const toggleMarkdownMode = useCallback(() => {
     if (!editor) return;
@@ -939,7 +957,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
 
       {/* Code Block Dialog */}
       <Dialog open={showCodeBlockDialog} onOpenChange={setShowCodeBlockDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-4xl max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Insert Code Block</DialogTitle>
           </DialogHeader>
@@ -976,9 +994,33 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
                 <option value="shell">Shell</option>
               </select>
             </div>
+            <div>
+              <Label>Code Editor</Label>
+              <div className="border border-border rounded-md overflow-hidden">
+                <Editor
+                  height="400px"
+                  language={codeLanguage}
+                  value={codeContent}
+                  onChange={(value) => setCodeContent(value || '')}
+                  theme="vs-dark"
+                  options={{
+                    minimap: { enabled: false },
+                    fontSize: 14,
+                    lineNumbers: 'on',
+                    scrollBeyondLastLine: false,
+                    automaticLayout: true,
+                    tabSize: 2,
+                  }}
+                />
+              </div>
+            </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowCodeBlockDialog(false)}>
+            <Button variant="outline" onClick={() => {
+              setShowCodeBlockDialog(false);
+              setCodeContent('');
+              setCodeLanguage('javascript');
+            }}>
               Cancel
             </Button>
             <Button onClick={handleInsertCodeBlock}>
