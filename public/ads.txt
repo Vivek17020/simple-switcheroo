@@ -1,0 +1,11 @@
+# ads.txt file for TheBulletinBriefs
+# Replace PUBLISHER_ID with your actual Google AdSense publisher ID
+# Format: google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+
+# Instructions:
+# 1. Sign up for Google AdSense at https://www.google.com/adsense/
+# 2. Get your publisher ID (starts with "pub-")
+# 3. Replace "pub-XXXXXXXXXXXXXXXX" above with your actual publisher ID
+# 4. Remove these instruction comments after updating
