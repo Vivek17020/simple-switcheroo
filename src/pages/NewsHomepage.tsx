@@ -374,7 +374,7 @@ export default function NewsHomepage() {
         <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
 
         {/* Floating Translation Button */}
-        <FloatingTranslationButton />
+        {/* <FloatingTranslationButton /> */}
       </div>
     </>
   );
