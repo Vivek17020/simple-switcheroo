@@ -14,6 +14,7 @@ export default async function handler(req, res) {
     const sitemaps = [
       { loc: `${baseUrl}/sitemap.xml`, lastmod: today },
       { loc: `${baseUrl}/web3-sitemap.xml`, lastmod: today },
+      { loc: `${baseUrl}/upsc-sitemap.xml`, lastmod: today },
       { loc: `${baseUrl}/sitemap-tools.xml`, lastmod: today },
       { loc: `${baseUrl}/web-stories-sitemap.xml`, lastmod: today },
       { loc: `${baseUrl}/videos-sitemap.xml`, lastmod: today },

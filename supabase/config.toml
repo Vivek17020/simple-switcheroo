@@ -132,9 +132,6 @@ verify_jwt = false
 [functions.publish-scheduled-articles]
 verify_jwt = false
 
-[functions.auto-generate-trending-webstories]
-verify_jwt = false
-
 [functions.suggest-internal-links]
 verify_jwt = false
 
@@ -169,4 +166,7 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.index-videos]
+verify_jwt = false
+
+[functions.index-upsc-articles]
 verify_jwt = false
