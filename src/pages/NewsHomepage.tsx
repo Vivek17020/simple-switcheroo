@@ -228,7 +228,7 @@ export default function NewsHomepage() {
               <TrendingUp className="h-6 w-6 text-primary" />
               Explore Our Sections
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               <a href="/web3forindia" className="group">
                 <Card className="h-full bg-gradient-to-br from-purple-500/10 to-blue-500/10 border-purple-500/20 hover:border-purple-500/40 transition-all hover:shadow-lg hover:shadow-purple-500/10">
                   <CardContent className="p-6 flex flex-col items-center text-center">
@@ -237,6 +237,19 @@ export default function NewsHomepage() {
                     </div>
                     <h3 className="font-semibold text-lg mb-2">Web3ForIndia</h3>
                     <p className="text-sm text-muted-foreground mb-4">Learn Blockchain, Crypto & Web3 Technologies</p>
+                    <span className="text-primary text-sm font-medium group-hover:underline">Explore →</span>
+                  </CardContent>
+                </Card>
+              </a>
+
+              <a href="/upscbriefs" className="group">
+                <Card className="h-full bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border-amber-500/20 hover:border-amber-500/40 transition-all hover:shadow-lg hover:shadow-amber-500/10">
+                  <CardContent className="p-6 flex flex-col items-center text-center">
+                    <div className="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <BookOpen className="h-6 w-6 text-amber-500" />
+                    </div>
+                    <h3 className="font-semibold text-lg mb-2">UPSC Briefs</h3>
+                    <p className="text-sm text-muted-foreground mb-4">UPSC Exam Preparation & Study Material</p>
                     <span className="text-primary text-sm font-medium group-hover:underline">Explore →</span>
                   </CardContent>
                 </Card>
