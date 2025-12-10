@@ -6,7 +6,7 @@ const corsHeaders = {
 }
 
 interface AIRequest {
-  task: 'summary' | 'title' | 'keywords' | 'translation' | 'format-seo-content' | 'humanize-content' | 'seo-optimize' | 'bold-keywords' | 'extract-tags' | 'format-and-extract-all' | 'format-cricket' | 'format-as-news' | 'format-as-listicle' | 'format-as-scheme' | 'format-as-sports' | 'suggest-external-links'
+  task: 'summary' | 'title' | 'keywords' | 'translation' | 'format-seo-content' | 'humanize-content' | 'seo-optimize' | 'bold-keywords' | 'extract-tags' | 'format-and-extract-all' | 'format-cricket' | 'format-as-news' | 'format-as-listicle' | 'format-as-scheme' | 'format-as-sports' | 'suggest-external-links' | 'format-as-upsc'
   content: string
   title?: string
   targetLanguage?: string
