@@ -6,11 +6,11 @@ const subjects = [
   { name: "Economy", slug: "economy" },
   { name: "Geography", slug: "geography" },
   { name: "History", slug: "history" },
-  { name: "Environment", slug: "environment" },
+  { name: "Environment", slug: "upsc-environment" },
   { name: "Science & Tech", slug: "science-tech" },
   { name: "Art & Culture", slug: "art-culture" },
-  { name: "International Relations", slug: "international-relations" },
-  { name: "Society", slug: "society" },
+  { name: "International Relations", slug: "upsc-international-relations" },
+  { name: "Society", slug: "upsc-society" },
 ];
 
 export const UPSCFooter = () => {
@@ -91,12 +91,6 @@ export const UPSCFooter = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-500">
           <p>© {new Date().getFullYear()} UPSCBriefs. All rights reserved.</p>
-          <p className="mt-1">
-            A project by{" "}
-            <Link to="/" className="text-blue-400 hover:text-blue-300">
-              The Bulletin Briefs
-            </Link>
-          </p>
         </div>
       </div>
     </footer>

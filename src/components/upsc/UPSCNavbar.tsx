@@ -1,14 +1,23 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   GraduationCap, Search, Menu, X, ChevronDown, ChevronRight,
   BookOpen, Users, FileText, History, Globe, Leaf, Cpu, Palette, Building, Home,
   Target, PenTool, Newspaper, Brain, FolderOpen, Info,
-  CheckSquare, Clock, BookMarked, Download, Calendar, Map
+  CheckSquare, Clock, BookMarked, Download, Calendar, Map, User, LogIn, LogOut, LayoutDashboard
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UPSCSearchDialog } from "./UPSCSearchDialog";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // Navigation data structure
 const gsSubjects = [
@@ -143,8 +152,15 @@ export const UPSCNavbar = () => {
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [showMobileSubjects, setShowMobileSubjects] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const navRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/upscbriefs");
+  };
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -344,7 +360,7 @@ export const UPSCNavbar = () => {
               </Link>
             </nav>
 
-            {/* Search & Mobile Menu */}
+            {/* Search, User Menu & Mobile Menu */}
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
@@ -354,6 +370,63 @@ export const UPSCNavbar = () => {
               >
                 <Search className="w-5 h-5" />
               </Button>
+
+              {/* User Menu */}
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user.user_metadata?.avatar_url} />
+                        <AvatarFallback className="bg-blue-100 text-blue-700 text-sm font-medium">
+                          {user.email?.charAt(0).toUpperCase() || "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="px-2 py-1.5 text-sm font-medium text-gray-900">
+                      {user.user_metadata?.full_name || user.email}
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to="/upscbriefs/dashboard" className="flex items-center gap-2 cursor-pointer">
+                        <LayoutDashboard className="w-4 h-4" />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/upscbriefs/dashboard" className="flex items-center gap-2 cursor-pointer">
+                        <BookMarked className="w-4 h-4" />
+                        My Bookmarks
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/upscbriefs/dashboard" className="flex items-center gap-2 cursor-pointer">
+                        <Target className="w-4 h-4" />
+                        My Progress
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut} className="flex items-center gap-2 text-red-600 cursor-pointer">
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="hidden sm:flex items-center gap-2 text-blue-700 hover:text-blue-800 hover:bg-blue-50"
+                >
+                  <Link to="/auth">
+                    <LogIn className="w-4 h-4" />
+                    Login
+                  </Link>
+                </Button>
+              )}
 
               <Button
                 variant="ghost"
