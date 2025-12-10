@@ -1,2 +1,0 @@
-# ads.txt file for TheBulletinBriefs
-google.com, pub-8705825692661561, DIRECT, f08c47fec0942fa0
