@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { UPSCSearchDialog } from "./UPSCSearchDialog";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
+import { useUPSCCategoriesWithCounts, UPSCCategoryGroup } from "@/hooks/use-upsc-categories-with-counts";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,76 +19,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-// Navigation data structure
-const gsSubjects = [
-  { name: "Polity", slug: "polity", icon: Building, color: "#2563EB" },
-  { name: "Economy", slug: "economy", icon: FileText, color: "#059669" },
-  { name: "Geography", slug: "geography", icon: Globe, color: "#D97706" },
-  { name: "History", slug: "history", icon: History, color: "#DC2626" },
-  { name: "Environment", slug: "upsc-environment", icon: Leaf, color: "#16A34A" },
-  { name: "Science & Tech", slug: "science-tech", icon: Cpu, color: "#7C3AED" },
-  { name: "Art & Culture", slug: "art-culture", icon: Palette, color: "#DB2777" },
-  { name: "International Relations", slug: "upsc-international-relations", icon: Users, color: "#0891B2" },
-  { name: "Society", slug: "upsc-society", icon: Users, color: "#EA580C" },
-];
-
-const prelimsItems = [
-  { name: "Prelims GS Notes", slug: "upsc-prelims-gs-notes", icon: BookOpen },
-  { name: "Topic-wise MCQs", slug: "upsc-topic-wise-mcqs", icon: CheckSquare },
-  { name: "CSAT", slug: "upsc-csat", icon: Brain },
-  { name: "Previous Year Questions", slug: "upsc-prelims-pyq", icon: History },
-  { name: "Prelims Mock Tests", slug: "upsc-prelims-mock-tests", icon: Target },
-];
-
-const mainsItems = [
-  { name: "GS Paper 1", slug: "upsc-gs1", description: "Heritage, History, Geography" },
-  { name: "GS Paper 2", slug: "upsc-gs2", description: "Governance, Constitution, Polity" },
-  { name: "GS Paper 3", slug: "upsc-gs3", description: "Economy, Environment, S&T" },
-  { name: "GS Paper 4", slug: "upsc-gs4", description: "Ethics, Integrity, Aptitude" },
-  { name: "Essay Strategy", slug: "upsc-essay-strategy", description: "Writing techniques" },
-  { name: "Model Answers", slug: "upsc-model-answers", description: "Sample answers" },
-  { name: "Mains PYQs", slug: "upsc-mains-pyq", description: "Previous year questions" },
-];
-
-const optionalItems = [
-  { name: "PSIR", slug: "upsc-psir" },
-  { name: "Sociology", slug: "upsc-sociology-optional" },
-  { name: "Geography", slug: "upsc-geography-optional" },
-  { name: "Anthropology", slug: "upsc-anthropology" },
-  { name: "Public Administration", slug: "upsc-public-admin" },
-  { name: "History", slug: "upsc-history-optional" },
-  { name: "Philosophy", slug: "upsc-philosophy" },
-  { name: "Economics", slug: "upsc-economics-optional" },
-  { name: "Literature Optionals", slug: "upsc-literature-optional" },
-];
-
-const currentAffairsItems = [
-  { name: "Daily CA", slug: "upsc-daily-ca", icon: Calendar },
-  { name: "Monthly CA", slug: "upsc-monthly-ca", icon: BookMarked },
-  { name: "PIB Summary", slug: "upsc-pib-summary", icon: FileText },
-  { name: "Yojana Summary", slug: "upsc-yojana-summary", icon: BookOpen },
-  { name: "Kurukshetra Summary", slug: "upsc-kurukshetra-summary", icon: BookOpen },
-  { name: "Editorial Notes", slug: "upsc-editorial-notes", icon: PenTool },
-];
-
-const practiceItems = [
-  { name: "Daily Quiz", slug: "upsc-daily-quiz", icon: CheckSquare },
-  { name: "Weekly Quiz", slug: "upsc-weekly-quiz", icon: Clock },
-  { name: "Topic-wise Test", slug: "upsc-topic-test", icon: Target },
-  { name: "Flashcards", slug: "upsc-flashcards", icon: BookMarked },
-  { name: "Revision Notes", slug: "upsc-revision-notes", icon: FileText },
-];
-
-const resourcesItems = [
-  { name: "UPSC Syllabus", slug: "upsc-syllabus", icon: FileText },
-  { name: "NCERT Notes", slug: "upsc-ncert-notes", icon: BookOpen },
-  { name: "Standard Booklist", slug: "upsc-booklist", icon: BookMarked },
-  { name: "Previous Year Papers", slug: "upsc-pyp", icon: History },
-  { name: "Maps & Infographics", slug: "upsc-maps-infographics", icon: Map },
-  { name: "UPSC Calendar", slug: "upsc-calendar", icon: Calendar },
-  { name: "PDF Downloads", slug: "upsc-pdf-downloads", icon: Download },
-];
 
 interface DropdownProps {
   items: Array<{ name: string; slug: string; icon?: any; color?: string; description?: string }>;
@@ -114,10 +45,10 @@ const SimpleDropdown = ({ items, basePath = "/upscbriefs", onClose }: DropdownPr
   </div>
 );
 
-const SubjectsMegaDropdown = ({ onClose }: { onClose: () => void }) => (
+const SubjectsMegaDropdown = ({ items, onClose }: { items: Array<{ name: string; slug: string; icon?: any; color?: string }>; onClose: () => void }) => (
   <div className="bg-white rounded-xl shadow-2xl border border-gray-200 p-6 z-[99999] w-[600px] -translate-x-1/4 animate-in fade-in-0 slide-in-from-top-2 duration-200">
     <div className="grid grid-cols-3 gap-4">
-      {gsSubjects.map((subject) => (
+      {items.map((subject) => (
         <Link
           key={subject.slug}
           to={`/upscbriefs/${subject.slug}`}
@@ -128,7 +59,7 @@ const SubjectsMegaDropdown = ({ onClose }: { onClose: () => void }) => (
             className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 group-hover:scale-110 group-hover:shadow-md"
             style={{ backgroundColor: `${subject.color}15` }}
           >
-            <subject.icon className="w-5 h-5 transition-transform duration-200" style={{ color: subject.color }} />
+            {subject.icon && <subject.icon className="w-5 h-5 transition-transform duration-200" style={{ color: subject.color }} />}
           </div>
           <span className="font-medium text-gray-700 group-hover:text-gray-900 transition-colors">{subject.name}</span>
         </Link>
@@ -156,6 +87,19 @@ export const UPSCNavbar = () => {
   const navRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { user, signOut } = useAuth();
+  
+  // Fetch dynamic categories with counts
+  const { data: categoryData } = useUPSCCategoriesWithCounts();
+  const groupedCategories = categoryData?.groupedCategories as Record<UPSCCategoryGroup, Array<{ name: string; slug: string; icon?: any; color?: string; description?: string }>> | undefined;
+  
+  // Get visible category groups (only show groups that have categories with 3+ articles)
+  const gsSubjects = groupedCategories?.subjects || [];
+  const prelimsItems = groupedCategories?.prelims || [];
+  const mainsItems = groupedCategories?.mains || [];
+  const optionalItems = groupedCategories?.optional || [];
+  const currentAffairsItems = groupedCategories?.currentAffairs || [];
+  const practiceItems = groupedCategories?.practice || [];
+  const resourcesItems = groupedCategories?.resources || [];
 
   const handleSignOut = async () => {
     await signOut();
@@ -327,13 +271,17 @@ export const UPSCNavbar = () => {
                 Home
               </Link>
 
-              <NavItem label="Subjects (GS)" dropdownKey="subjects">
-                <SubjectsMegaDropdown onClose={closeDropdown} />
-              </NavItem>
+              {gsSubjects.length > 0 && (
+                <NavItem label="Subjects (GS)" dropdownKey="subjects">
+                  <SubjectsMegaDropdown items={gsSubjects} onClose={closeDropdown} />
+                </NavItem>
+              )}
 
-              <NavItem label="Prelims" dropdownKey="prelims">
-                <SimpleDropdown items={prelimsItems} onClose={closeDropdown} />
-              </NavItem>
+              {prelimsItems.length > 0 && (
+                <NavItem label="Prelims" dropdownKey="prelims">
+                  <SimpleDropdown items={prelimsItems} onClose={closeDropdown} />
+                </NavItem>
+              )}
 
               <NavItem label="Mains" dropdownKey="mains">
                 <SimpleDropdown items={mainsItems} onClose={closeDropdown} />

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 import { NewsletterSignup } from './newsletter-signup';
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import { useVisibleCategoriesForFooter } from '@/hooks/use-categories-with-counts';
 
 const socialLinks = [
   { name: 'Facebook', icon: Facebook, href: 'https://www.facebook.com/profile.php?id=61580246143943' },
@@ -23,14 +24,6 @@ const footerLinks = {
     { name: 'Cookie Policy', href: '/cookies' },
     { name: 'Disclaimer', href: '/disclaimer' },
   ],
-  sections: [
-    { name: 'Latest News', href: '/' },
-    { name: 'Politics News', href: '/category/politics' },
-    { name: 'Technology Updates', href: '/category/tech' },
-    { name: 'Business & Finance', href: '/category/business' },
-    { name: 'Sports Coverage', href: '/category/sports' },
-    { name: 'World News', href: '/category/world' },
-  ],
   explore: [
     { name: 'Trending Web Stories', href: '/web-stories' },
     { name: 'Learn Web3 & Blockchain', href: '/web3forindia' },
@@ -42,6 +35,13 @@ const footerLinks = {
 };
 
 export function Footer() {
+  const { footerCategories, isLoading } = useVisibleCategoriesForFooter();
+  
+  // Generate dynamic sections from visible categories
+  const dynamicSections = footerCategories.map(cat => ({
+    name: cat.name,
+    href: `/category/${cat.slug}`,
+  }));
   return (
     <footer className="bg-card border-t">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -102,12 +102,20 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Sections */}
+          {/* Sections - Dynamic based on article count */}
           <div>
             <h3 className="font-semibold mb-4">Sections</h3>
             <ul className="space-y-3">
-              {footerLinks.sections.map((link) => (
-                <li key={link.name}>
+              <li>
+                <Link 
+                  to="/" 
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Latest News
+                </Link>
+              </li>
+              {dynamicSections.map((link) => (
+                <li key={link.href}>
                   <Link 
                     to={link.href} 
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"

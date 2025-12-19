@@ -1,14 +1,15 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useCategories } from "@/hooks/use-articles";
+import { useCategoriesWithCounts } from "@/hooks/use-categories-with-counts";
 import { Menu, X } from "lucide-react";
 import React, { useState, useRef, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { UserMenu } from "@/components/public/user-menu";
 
 export function Navbar() {
-  const { data: categories } = useCategories();
+  const { data: categoriesData } = useCategoriesWithCounts();
+  const categories = categoriesData?.visibleCategories;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -28,17 +29,9 @@ export function Navbar() {
     }, 150);
   }, []);
 
-  // Preload categories data on mount to eliminate hover delays
-  React.useEffect(() => {
-    if (categories) {
-      // Data is loaded, preload is complete
-      console.log('Categories preloaded:', categories.length);
-    }
-  }, [categories]);
-
   // Jobs subcategories will be fetched dynamically from the database
   const jobsCategory = categories?.find(cat => cat.slug === 'jobs');
-  const jobsSubcategories = jobsCategory?.subcategories || [];
+  const jobsSubcategories = (jobsCategory?.subcategories || []).filter(sub => sub.article_count >= 3);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

@@ -1,19 +1,9 @@
 import { Link } from "react-router-dom";
 import { GraduationCap, Mail, ExternalLink, Blocks, Wrench } from "lucide-react";
-
-const subjects = [
-  { name: "Polity", slug: "polity" },
-  { name: "Economy", slug: "economy" },
-  { name: "Geography", slug: "geography" },
-  { name: "History", slug: "history" },
-  { name: "Environment", slug: "upsc-environment" },
-  { name: "Science & Tech", slug: "science-tech" },
-  { name: "Art & Culture", slug: "art-culture" },
-  { name: "International Relations", slug: "upsc-international-relations" },
-  { name: "Society", slug: "upsc-society" },
-];
+import { useUPSCFooterCategories } from "@/hooks/use-upsc-categories-with-counts";
 
 export const UPSCFooter = () => {
+  const { subjects } = useUPSCFooterCategories();
   return (
     <footer className="bg-gray-900 text-gray-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
