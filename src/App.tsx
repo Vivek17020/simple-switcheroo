@@ -131,6 +131,7 @@ const AdminUPSCFlashcards = lazy(() => import("@/pages/AdminUPSCFlashcards"));
 const AdminUPSCNotes = lazy(() => import("@/pages/AdminUPSCNotes"));
 const AdminUPSCPYQQuestions = lazy(() => import("@/pages/AdminUPSCPYQQuestions"));
 const UPSCPYQPractice = lazy(() => import("@/pages/UPSCPYQPractice"));
+const UPSCTopicMCQs = lazy(() => import("@/pages/UPSCTopicMCQs"));
 const AdminImageMigration = lazy(() => import("@/pages/AdminImageMigration"));
 
 const App = () => {
@@ -187,6 +188,8 @@ const App = () => {
               <Route path="optional" element={<React.Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}><UPSCOptionalPage /></React.Suspense>} />
               <Route path="contact" element={<React.Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}><UPSCContactPage /></React.Suspense>} />
               <Route path="pyq-practice" element={<React.Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}><UPSCPYQPractice /></React.Suspense>} />
+              <Route path="topic-mcqs" element={<React.Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}><UPSCTopicMCQs /></React.Suspense>} />
+              <Route path="topic-mcqs/:subject" element={<React.Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}><UPSCTopicMCQs /></React.Suspense>} />
               <Route path=":categorySlug/:articleSlug" element={<UPSCArticlePage />} />
               <Route path=":categorySlug" element={<UPSCCategoryPage />} />
             </Route>
