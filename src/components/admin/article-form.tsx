@@ -105,6 +105,7 @@ export function ArticleForm({ article, onSave }: ArticleFormProps) {
   const [isInjectingLinks, setIsInjectingLinks] = useState(false);
   const [isAnalyzingWeb3Content, setIsAnalyzingWeb3Content] = useState(false);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [isGeneratingMCQs, setIsGeneratingMCQs] = useState(false);
   const [discoverModalOpen, setDiscoverModalOpen] = useState(false);
   const [discoverData, setDiscoverData] = useState<any>(null);
   
@@ -2297,6 +2298,48 @@ export function ArticleForm({ article, onSave }: ArticleFormProps) {
                     >
                       <Sparkles className="w-4 h-4 mr-2" />
                       {isAnalyzingWeb3Content ? 'Analyzing Content...' : '🔮 Add Code Examples'}
+                    </Button>
+                  )}
+                  
+                  {/* Generate MCQs - Only for UPSC Articles */}
+                  {articleType === 'upsc' && article?.id && (
+                    <Button
+                      size="default"
+                      onClick={async () => {
+                        if (!article?.id) return;
+                        setIsGeneratingMCQs(true);
+                        try {
+                          toast({
+                            title: "🧠 Generating MCQs...",
+                            description: "Creating UPSC-style practice questions from this article",
+                          });
+                          
+                          const { data, error } = await supabase.functions.invoke('generate-article-mcqs', {
+                            body: { articleId: article.id, numberOfQuestions: 5 }
+                          });
+                          
+                          if (error) throw error;
+                          
+                          toast({
+                            title: "✅ MCQs Generated!",
+                            description: `${data.questionsGenerated} practice questions created successfully`,
+                          });
+                        } catch (error: any) {
+                          console.error('MCQ generation error:', error);
+                          toast({
+                            title: "Generation Failed",
+                            description: error?.message || "Failed to generate MCQs",
+                            variant: "destructive",
+                          });
+                        } finally {
+                          setIsGeneratingMCQs(false);
+                        }
+                      }}
+                      disabled={isGeneratingMCQs || !formData.content?.trim()}
+                      className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white transition-all duration-300 shadow-lg"
+                    >
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      {isGeneratingMCQs ? 'Generating MCQs...' : '🧠 Generate MCQs'}
                     </Button>
                   )}
                   

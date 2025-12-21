@@ -73,6 +73,7 @@ const currentAffairsItems = [
 
 const practiceItems = [
   { name: "Daily Quiz", slug: "practice", icon: CheckSquare },
+  { name: "Topic MCQs", slug: "topic-mcqs", icon: Target },
   { name: "Flashcards", slug: "flashcards", icon: BookMarked },
   { name: "PYQ Practice", slug: "pyq-practice", icon: History },
 ];

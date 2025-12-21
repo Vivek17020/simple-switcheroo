@@ -191,3 +191,6 @@ verify_jwt = false
 
 [functions.generate-article-notes]
 verify_jwt = false
+
+[functions.generate-article-mcqs]
+verify_jwt = false
