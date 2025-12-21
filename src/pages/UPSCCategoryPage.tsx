@@ -34,6 +34,8 @@ const UPSCCategoryPage = () => {
     );
   }
 
+  const hasContent = articles.length > 0;
+
   return (
     <div className="min-h-screen">
       <Helmet>
@@ -42,7 +44,8 @@ const UPSCCategoryPage = () => {
           name="description"
           content={category.description || `UPSC ${category.name} notes and study material for IAS preparation.`}
         />
-        <meta name="robots" content="index, follow" />
+        {/* Noindex empty categories to avoid thin content issues */}
+        <meta name="robots" content={hasContent ? "index, follow" : "noindex, nofollow"} />
         <link rel="canonical" href={`https://www.thebulletinbriefs.in/upscbriefs/${categorySlug}`} />
       </Helmet>
 

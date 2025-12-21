@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { UPSCSearchDialog } from "./UPSCSearchDialog";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
+import { useUPSCCategories } from "@/hooks/use-upsc-articles";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,8 +20,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-// Navigation data structure
-const gsSubjects = [
+// Navigation data structure - these will be filtered based on content availability
+const allGsSubjects = [
   { name: "Polity", slug: "polity", icon: Building, color: "#2563EB" },
   { name: "Economy", slug: "economy", icon: FileText, color: "#059669" },
   { name: "Geography", slug: "geography", icon: Globe, color: "#D97706" },
@@ -113,10 +114,10 @@ const SimpleDropdown = ({ items, basePath = "/upscbriefs", onClose }: DropdownPr
   </div>
 );
 
-const SubjectsMegaDropdown = ({ onClose }: { onClose: () => void }) => (
+const SubjectsMegaDropdown = ({ onClose, subjects }: { onClose: () => void; subjects: typeof allGsSubjects }) => (
   <div className="bg-white rounded-xl shadow-2xl border border-gray-200 p-6 z-[99999] w-[600px] -translate-x-1/4 animate-in fade-in-0 slide-in-from-top-2 duration-200">
     <div className="grid grid-cols-3 gap-4">
-      {gsSubjects.map((subject) => (
+      {subjects.map((subject) => (
         <Link
           key={subject.slug}
           to={`/upscbriefs/${subject.slug}`}
@@ -155,6 +156,13 @@ export const UPSCNavbar = () => {
   const navRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { user, signOut } = useAuth();
+  const { data: categories = [] } = useUPSCCategories();
+
+  // Filter subjects to only show those with content
+  const categoriesWithContent = categories.filter(c => c.article_count && c.article_count > 0);
+  const gsSubjects = allGsSubjects.filter(subject => 
+    categoriesWithContent.some(c => c.slug === subject.slug)
+  );
 
   const handleSignOut = async () => {
     await signOut();
@@ -327,7 +335,7 @@ export const UPSCNavbar = () => {
               </Link>
 
               <NavItem label="Subjects (GS)" dropdownKey="subjects">
-                <SubjectsMegaDropdown onClose={closeDropdown} />
+                <SubjectsMegaDropdown onClose={closeDropdown} subjects={gsSubjects} />
               </NavItem>
 
               <NavItem label="Prelims" dropdownKey="prelims">
