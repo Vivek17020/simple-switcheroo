@@ -6,7 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { UPSCBreadcrumb } from "@/components/upsc/UPSCBreadcrumb";
 
-const prelimsSections = [
+interface PrelimsSection {
+  name: string;
+  slug: string;
+  icon: typeof BookOpen;
+  color: string;
+  description: string;
+  articles: number;
+  isDirectLink?: boolean;
+}
+
+const prelimsSections: PrelimsSection[] = [
   {
     name: "Prelims GS Notes",
     slug: "upsc-prelims-gs-notes",
@@ -17,11 +27,12 @@ const prelimsSections = [
   },
   {
     name: "Topic-wise MCQs",
-    slug: "upsc-topic-wise-mcqs",
+    slug: "topic-mcqs",
     icon: CheckSquare,
     color: "#8B5CF6",
     description: "Practice MCQs organized by subject and topic",
-    articles: 0
+    articles: 0,
+    isDirectLink: true
   },
   {
     name: "CSAT Preparation",
@@ -108,7 +119,7 @@ const UPSCPrelimsPage = () => {
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Explore Prelims Sections</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {prelimsSections.map((section) => (
-                <Link key={section.slug} to={`/upscbriefs/${section.slug}`}>
+                <Link key={section.slug} to={section.isDirectLink ? `/upscbriefs/${section.slug}` : `/upscbriefs/${section.slug}`}>
                   <Card className="h-full hover:shadow-lg transition-shadow group">
                     <CardContent className="p-6">
                       <div 
