@@ -72,11 +72,9 @@ const currentAffairsItems = [
 ];
 
 const practiceItems = [
-  { name: "Daily Quiz", slug: "upsc-daily-quiz", icon: CheckSquare },
-  { name: "Weekly Quiz", slug: "upsc-weekly-quiz", icon: Clock },
-  { name: "Topic-wise Test", slug: "upsc-topic-test", icon: Target },
-  { name: "Flashcards", slug: "upsc-flashcards", icon: BookMarked },
-  { name: "Revision Notes", slug: "upsc-revision-notes", icon: FileText },
+  { name: "Daily Quiz", slug: "practice", icon: CheckSquare },
+  { name: "Flashcards", slug: "flashcards", icon: BookMarked },
+  { name: "PYQ Practice", slug: "pyq-practice", icon: History },
 ];
 
 const resourcesItems = [
@@ -141,7 +139,7 @@ const SubjectsMegaDropdown = ({ onClose }: { onClose: () => void }) => (
 const mobileNavItems = [
   { name: "Home", icon: Home, path: "/upscbriefs" },
   { name: "Subjects", icon: BookOpen, path: "#subjects-mobile" },
-  { name: "Practice", icon: Target, path: "/upscbriefs/upsc-daily-quiz" },
+  { name: "Practice", icon: Target, path: "/upscbriefs/practice" },
   { name: "Search", icon: Search, path: "#search" },
 ];
 
