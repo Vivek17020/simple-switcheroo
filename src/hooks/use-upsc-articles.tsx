@@ -23,10 +23,19 @@ interface FormattedArticle extends UPSCArticle {
   category_color: string;
 }
 
+interface CategoryWithCount {
+  id: string;
+  slug: string;
+  name: string;
+  color: string;
+  description: string | null;
+  article_count: number;
+}
+
 export const useUPSCCategories = () => {
   return useQuery({
     queryKey: ["upsc-categories"],
-    queryFn: async () => {
+    queryFn: async (): Promise<CategoryWithCount[]> => {
       // Get the UPSC parent category
       const { data: parentCategory, error: parentError } = await supabase
         .from("categories")
@@ -44,7 +53,30 @@ export const useUPSCCategories = () => {
         .eq("parent_id", parentCategory.id);
 
       if (error) throw error;
-      return categories;
+      if (!categories) return [];
+
+      // Get article counts for each category
+      const categoryIds = categories.map(c => c.id);
+      const { data: articles } = await supabase
+        .from("articles")
+        .select("category_id")
+        .in("category_id", categoryIds)
+        .eq("published", true);
+
+      const articleCounts = new Map<string, number>();
+      articles?.forEach(article => {
+        const count = articleCounts.get(article.category_id) || 0;
+        articleCounts.set(article.category_id, count + 1);
+      });
+
+      return categories.map(cat => ({
+        id: cat.id,
+        slug: cat.slug,
+        name: cat.name,
+        color: cat.color || "#2563EB",
+        description: cat.description,
+        article_count: articleCounts.get(cat.id) || 0,
+      }));
     },
     staleTime: 1000 * 60 * 10, // 10 minutes
   });
