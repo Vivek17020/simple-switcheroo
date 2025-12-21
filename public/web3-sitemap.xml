@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- This is a placeholder. The dynamic sitemap is served at /api/web3-sitemap.xml -->
+  <!-- It includes all Web3 articles, categories, learning paths, and code snippets -->
+  <url>
+    <loc>https://www.thebulletinbriefs.in/web3forindia</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
